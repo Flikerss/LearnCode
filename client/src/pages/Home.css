@@ -1,0 +1,63 @@
+.home {
+  position: relative;
+  margin-top: 80px; 
+  min-height: calc(100vh - 80px);
+  display: block;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+
+.background-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; 
+  z-index: 0;
+}
+
+.home-content {
+  position: relative;
+  z-index: 1;
+  text-align: left;
+  max-width: 1400px;
+  padding: 200px 40px;
+  color: white;
+}
+
+
+.home-content h1 {
+  font-size: 4rem;
+  line-height: 1.1;
+  margin-bottom: 20px;
+}
+
+.home-content p {
+  font-size: 1.8rem;
+  line-height: 1.3;
+  margin-bottom: 30px;
+}
+
+
+.start-btn {
+  background-color: orange;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.1s, opacity 0.1s;
+}
+
+.start-btn:hover {
+  background-color: #e69500;
+}
+
+.start-btn:active {
+  transform: scale(0.97);
+  opacity: 0.9;
+}
