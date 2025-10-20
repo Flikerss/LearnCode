@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "./Navbar.css";
 
 export default function Navbar() {
@@ -11,9 +12,9 @@ export default function Navbar() {
                 </div>
 
                 <ul className="navbar-links">
-                    <li>Уроки</li>
-                    <li>О нас</li>
-                    <li>Контакты</li>
+                    <li><Link to="/">Главная</Link></li>
+                    <li><Link to="/about">О проекте</Link></li>
+                    <li><Link to="/courses">Уроки</Link></li>
                 </ul>
 
                 <div className="navbar-buttons">

@@ -1,0 +1,70 @@
+.faq {
+  padding: 50px 40px;
+  background-color: #f9f9f9;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.faq h2 {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+/* Блоки вопросов */
+.faq details {
+  background: #fff;
+  border-radius: 10px;
+  padding: 15px 20px;
+  margin-bottom: 15px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.2s ease;
+}
+
+.faq details:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.faq summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  font-size: 1.1rem;
+  list-style: none;
+  cursor: pointer;
+}
+
+.faq summary::-webkit-details-marker {
+  display: none; /* убираем стандартную стрелку */
+}
+
+/* Плюс/крестик справа */
+.faq-icon {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 24px;
+  height: 24px;
+  border: 2px solid orange;
+  border-radius: 50%;
+  color: orange;
+  font-weight: bold;
+  transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
+}
+
+details[open] .faq-icon {
+  transform: rotate(45deg);
+  background: orange;
+  color: #fff;
+}
+
+/* Ответ */
+.faq p {
+  margin-top: 10px;
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.6;
+}

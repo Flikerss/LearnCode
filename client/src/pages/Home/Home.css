@@ -1,33 +1,17 @@
 .home {
   position: relative;
-  margin-top: 80px; 
-  min-height: calc(100vh - 80px);
-  display: block;
-  justify-content: center;
+  margin-top: 60px; 
+  min-height: calc(100vh - 60px);
+  display: flex;
+  justify-content: flex-start;
   align-items: center;
-  overflow: hidden;
-}
-
-
-.background-video {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover; 
-  z-index: 0;
+  padding: 200px 40px;
+  background-color: #f8fafc;
 }
 
 .home-content {
-  position: relative;
-  z-index: 1;
-  text-align: left;
-  max-width: 1400px;
-  padding: 200px 40px;
-  color: white;
+  max-width: 800px;
 }
-
 
 .home-content h1 {
   font-size: 4rem;
@@ -41,6 +25,12 @@
   margin-bottom: 30px;
 }
 
+.server-info {
+  margin-bottom: 25px;
+  font-size: 1.2rem;
+  color: #f8fafc;
+  opacity: 0.9;
+}
 
 .start-btn {
   background-color: orange;

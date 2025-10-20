@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import "./Home.css";
-import bgVideo from "../assets/bgvid.mp4";
-import Advantages from "../components/Advantages";
-import Reviews from "../components/Reviews";
-import Courses from "../components/Courses";
-import Footer from "../components/Footer";
+import Advantages from "../../components/Advantages";
+import Reviews from "../../components/Reviews";
+import Courses from "../../components/Courses";
+import Footer from "../../components/Footer";
 
 export default function Home() {
   const [serverData, setServerData] = useState(null);
@@ -24,16 +23,11 @@ export default function Home() {
 
   return (
     <>
-      {/* Главный экран с видеофоном */}<section className="home">
-        <video className="background-video" autoPlay muted loop playsInline>
-          <source src={bgVideo} type="video/mp4" />
-        </video>
-
+      <section className="home">
         <div className="home-content">
           <h1>LearnCode на связи 🤙🤙</h1>
           <p>Изучай JavaScript и создавай реальные проекты вместе с нами!</p>
 
-          
           {serverData ? (
             <div className="server-info">
               <p>{serverData.message}</p>
@@ -49,7 +43,6 @@ export default function Home() {
         </div>
       </section>
 
-      
       <Courses />
       <Advantages />
       <Reviews />

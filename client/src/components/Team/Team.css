@@ -1,0 +1,40 @@
+.team {
+  margin: 50px auto;
+  padding: 100px 40px;
+  max-width: 1000px;
+  background: #fff;
+  max-width: 1000px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  padding: 40px 50px;
+}
+
+.team h2 {
+  margin-bottom: 30px;
+  font-size: 2.5rem;
+  color: #333;
+}
+
+.team-members {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.member-card {
+  background: #f5f5f5;
+  padding: 40px;
+  border-radius: 12px;
+  width: 240px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.216);
+}
+
+.member-photo {
+  width: 100px;
+  height: 100px;
+  background: orange;
+  border-radius: 50%;
+  margin: 0 auto 10px;
+  object-fit: cover;
+}
