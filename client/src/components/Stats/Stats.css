@@ -9,8 +9,6 @@
   border-radius: 12px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
-  
-
 
 .stat-item {
   text-align: center;
@@ -23,5 +21,21 @@
 }
 
 .stat-item p {
-  font-size:1.5rem;
+  font-size: 1.5rem;
+}
+
+@media (max-width: 800px) {
+  .stats {
+    flex-direction: column;
+    gap: 25px;
+    padding: 40px 20px;
+  }
+
+  .stat-item h2 {
+    font-size: 2rem;
+  }
+
+  .stat-item p {
+    font-size: 1.2rem;
+  }
 }

@@ -1,27 +1,78 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./Navbar.css";
 
 export default function Navbar() {
-    return (
-        <nav className="navbar">
-            <div className="navbar-container">
-                <div className="navbar-logo">
-                    <div className="logo-icon"></div>
-                    <span className="logo-text">LearnCode</span>
-                </div>
+  const [isOpen, setIsOpen] = useState(false);
+  const [user] = useState(null); 
 
-                <ul className="navbar-links">
-                    <li><Link to="/">Главная</Link></li>
-                    <li><Link to="/about">О проекте</Link></li>
-                    <li><Link to="/courses">Уроки</Link></li>
-                </ul>
+  const isGuest = !user;
+  const userName = user ? user.name : "Гость";
+  const userAvatar = user ? user.avatar : null;
 
-                <div className="navbar-buttons">
-                    <button className="btn-outline">Войти</button>
-                    <button className="btn-filled">Регистрация</button>
-                </div>
+  return (
+    <nav className="navbar">
+      <div className="navbar-container">
+        <Link to="/" className="navbar-logo">
+          <div className="logo-icon"></div>
+          <span className="logo-text">LearnCode</span>
+        </Link>
+
+       
+        <ul className="navbar-links">
+          <li><Link to="/">Главная</Link></li>
+          <li><Link to="/about">О проекте</Link></li>
+          <li><Link to="/courses">Уроки</Link></li>
+        </ul>
+
+      
+        <div className="navbar-right">
+          {isGuest && (
+            <div className="navbar-actions">
+              <Link to="/login" className="btn-outline">Войти</Link>
+              <Link to="/register" className="btn-filled">Регистрация</Link>
             </div>
-        </nav>
-    )
+          )}
+
+          {/* profile */}
+          <div className="navbar-user">
+            <div className="avatar-wrapper">
+              {userAvatar ? (
+                <img src={userAvatar} alt={userName} className="avatar" />
+              ) : (
+                <div className="avatar-placeholder"></div>
+              )}
+            </div>
+            <span className="username">{userName}</span>
+          </div>
+
+          {/* menuu */}
+          <div
+            className={`hamburger ${isOpen ? "active" : ""}`}
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      </div>
+
+      {/* Мобильное меню */}
+      <div className={`mobile-menu ${isOpen ? "open" : ""}`}>
+        <ul className="mobile-links">
+          <li><Link to="/" onClick={() => setIsOpen(false)}>Главная</Link></li>
+          <li><Link to="/about" onClick={() => setIsOpen(false)}>О проекте</Link></li>
+          <li><Link to="/courses" onClick={() => setIsOpen(false)}>Уроки</Link></li>
+        </ul>
+
+        {isGuest && (
+          <div className="mobile-actions">
+            <Link to="/login" className="btn-outline fullwidth" onClick={() => setIsOpen(false)}>Войти</Link>
+            <Link to="/register" className="btn-filled fullwidth" onClick={() => setIsOpen(false)}>Регистрация</Link>
+          </div>
+        )}
+      </div>
+    </nav>
+  );
 }

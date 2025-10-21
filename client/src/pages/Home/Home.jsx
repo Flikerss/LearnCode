@@ -25,7 +25,7 @@ export default function Home() {
     <>
       <section className="home">
         <div className="home-content">
-          <h1>LearnCode на связи 🤙🤙</h1>
+          <h1>LearnCode на связи</h1>
           <p>Изучай JavaScript и создавай реальные проекты вместе с нами!</p>
 
           {serverData ? (

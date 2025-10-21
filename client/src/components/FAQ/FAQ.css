@@ -1,8 +1,10 @@
 .faq {
-  padding: 50px 40px;
+  padding: 60px 40px;
   background-color: #f9f9f9;
-  max-width: 900px;
-  margin: 0 auto;
+  max-width: 1000px;
+  margin: 0px auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
 .faq h2 {
@@ -12,7 +14,6 @@
   text-align: center;
 }
 
-/* Блоки вопросов */
 .faq details {
   background: #fff;
   border-radius: 10px;
@@ -20,11 +21,12 @@
   margin-bottom: 15px;
   cursor: pointer;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  transition: box-shadow 0.2s ease;
+  transition: box-shadow 0.2s ease, transform 0.15s ease;
 }
 
 .faq details:hover {
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  transform: translateY(-3px);
 }
 
 .faq summary {
@@ -38,10 +40,9 @@
 }
 
 .faq summary::-webkit-details-marker {
-  display: none; /* убираем стандартную стрелку */
+  display: none;
 }
 
-/* Плюс/крестик справа */
 .faq-icon {
   display: inline-flex;
   justify-content: center;
@@ -61,10 +62,32 @@ details[open] .faq-icon {
   color: #fff;
 }
 
-/* Ответ */
 .faq p {
   margin-top: 10px;
   font-size: 1rem;
   color: #555;
   line-height: 1.6;
+}
+
+
+@media (max-width: 800px) {
+  .faq {
+    padding: 40px 20px;
+  }
+
+  .faq h2 {
+    font-size: 1.8rem;
+  }
+
+  .faq details {
+    padding: 12px 15px;
+  }
+
+  .faq summary {
+    font-size: 1rem;
+  }
+
+  .faq p {
+    font-size: 0.95rem;
+  }
 }
