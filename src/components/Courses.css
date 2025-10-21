@@ -1,0 +1,62 @@
+.courses {
+  padding: 80px 40px;
+  background-color: #f9f9f9;
+}
+
+.courses h2 {
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.lessons-list {
+  display: flex;
+  flex-direction: column; 
+  gap: 20px;                      
+  margin: 0;          
+}
+
+.lesson-card {
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;
+  background: #fff;
+  padding: 20px 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.lesson-info {
+  display: flex;
+  align-items: center;
+  gap: 15px; 
+}
+
+.lesson-number {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.lesson-title {
+  font-size: 1.1rem;
+}
+
+.lesson-btn {
+  background-color: orange;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.1s, opacity 0.1s;
+}
+
+.lesson-btn:hover {
+  background-color: #e69500;
+}
+
+.lesson-btn:active {
+  transform: scale(0.97);
+  opacity: 0.9;
+}

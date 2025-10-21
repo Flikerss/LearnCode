@@ -1,0 +1,41 @@
+.stats {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  margin: 50px auto;
+  padding: 50px;
+  max-width: 1000px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-item h2 {
+  font-size: 2.5rem;
+  color: orange;
+  margin-bottom: 8px;
+}
+
+.stat-item p {
+  font-size: 1.5rem;
+}
+
+@media (max-width: 800px) {
+  .stats {
+    flex-direction: column;
+    gap: 25px;
+    padding: 40px 20px;
+  }
+
+  .stat-item h2 {
+    font-size: 2rem;
+  }
+
+  .stat-item p {
+    font-size: 1.2rem;
+  }
+}
