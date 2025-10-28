@@ -2,9 +2,10 @@
   padding: 60px 40px;
   background-color: #f9f9f9;
   max-width: 1000px;
-  margin: 0px auto;
+  margin: 0 auto;
   border-radius: 12px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
 }
 
 .faq h2 {
@@ -14,61 +15,58 @@
   text-align: center;
 }
 
-.faq details {
+/* Карточка вопроса */
+.faq-item {
   background: #fff;
   border-radius: 10px;
-  padding: 15px 20px;
   margin-bottom: 15px;
-  cursor: pointer;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  transition: box-shadow 0.2s ease, transform 0.15s ease;
+  transition: all 0.25s ease;
+  cursor: pointer;
+  overflow: hidden;
 }
 
-.faq details:hover {
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-  transform: translateY(-3px);
+.faq-item.open {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
 }
 
-.faq summary {
+.faq-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 20px;
   font-weight: 600;
   font-size: 1.1rem;
-  list-style: none;
-  cursor: pointer;
-}
-
-.faq summary::-webkit-details-marker {
-  display: none;
+  color: #333;
 }
 
 .faq-icon {
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   border: 2px solid orange;
   border-radius: 50%;
   color: orange;
   font-weight: bold;
+  flex-shrink: 0;
   transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
 }
 
-details[open] .faq-icon {
-  transform: rotate(45deg);
+.faq-item.open .faq-icon {
   background: orange;
   color: #fff;
+  transform: rotate(180deg);
 }
 
-.faq p {
-  margin-top: 10px;
+/* Ответ */
+.faq-answer {
+  padding: 0 20px 20px 20px;
   font-size: 1rem;
   color: #555;
   line-height: 1.6;
 }
-
 
 @media (max-width: 800px) {
   .faq {
@@ -79,15 +77,12 @@ details[open] .faq-icon {
     font-size: 1.8rem;
   }
 
-  .faq details {
-    padding: 12px 15px;
-  }
-
-  .faq summary {
+  .faq-header {
     font-size: 1rem;
+    padding: 15px;
   }
 
-  .faq p {
+  .faq-answer {
     font-size: 0.95rem;
   }
 }

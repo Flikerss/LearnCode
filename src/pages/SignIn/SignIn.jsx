@@ -5,9 +5,23 @@ export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert(`Вход выполнен для: ${email}`);
+    try {
+      const res = await fetch("http://localhost:5000/user/signin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Ошибка входа");
+
+      localStorage.setItem("token", data.token);
+      alert(`Добро пожаловать, ${data.user.name}!`);
+    } catch (err) {
+      alert(err.message);
+    }
   };
 
   return (

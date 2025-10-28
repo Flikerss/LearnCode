@@ -1,0 +1,86 @@
+.catalog {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.chapter {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.chapter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.chapter-header h3 {
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 8px;
+  background: #eee;
+  border-radius: 8px;
+  margin-left: 20px;
+  overflow: hidden;
+}
+
+.progress {
+  height: 100%;
+  background: orange;
+  border-radius: 8px;
+}
+
+.lessons-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.lesson-card {
+  flex: 1 1 200px;
+  min-width: 180px;
+  background: #f5f5f5;
+  padding: 12px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.lesson-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.lesson-card.completed {
+  background: #e0f7ff;
+  border: 1px solid #00bfff;
+}
+
+.lesson-card.next {
+  border: 2px solid orange;
+  background: #fff4e5;
+  position: relative;
+}
+
+.lesson-card .hint {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: orange;
+}
+
+@media (max-width: 900px) {
+  .lessons-list {
+    flex-direction: column;
+  }
+}

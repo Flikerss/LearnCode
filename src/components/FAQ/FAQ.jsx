@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./FAQ.css";
 
 export default function FAQ({ data }) {
@@ -6,14 +6,29 @@ export default function FAQ({ data }) {
     <div className="faq">
       <h2>Частые вопросы</h2>
       {data.map((item, index) => (
-        <details key={index}>
-          <summary>
-            <span>{item.question}</span>
-            <span className="faq-icon">+</span>
-          </summary>
-          <p>{item.answer}</p>
-        </details>
+        <FAQItem key={index} question={item.question} answer={item.answer} />
       ))}
+    </div>
+  );
+}
+
+function FAQItem({ question, answer }) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div
+      className={`faq-item ${open ? "open" : ""}`}
+      onClick={() => setOpen(!open)}
+    >
+      <div className="faq-header">
+        <span>{question}</span>
+        <span className="faq-icon">{open ? "−" : "+"}</span>
+      </div>
+      {open && (
+        <div className="faq-answer">
+          <p>{answer}</p>
+        </div>
+      )}
     </div>
   );
 }

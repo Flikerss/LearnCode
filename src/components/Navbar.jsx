@@ -4,7 +4,7 @@ import "./Navbar.css";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [user] = useState(null); 
+  const [user] = useState(null);
 
   const isGuest = !user;
   const userName = user ? user.name : "Гость";
@@ -13,19 +13,20 @@ export default function Navbar() {
   return (
     <nav className="navbar">
       <div className="navbar-container">
+        {/* ЛОГО */}
         <Link to="/" className="navbar-logo">
           <div className="logo-icon"></div>
           <span className="logo-text">LearnCode</span>
         </Link>
 
-       
+        {/* ССЫЛКИ */}
         <ul className="navbar-links">
           <li><Link to="/">Главная</Link></li>
           <li><Link to="/about">О проекте</Link></li>
-          <li><Link to="/courses">Уроки</Link></li>
+          <li><Link to="/lessons">Уроки</Link></li>
         </ul>
 
-      
+        {/* ПРАВАЯ ЧАСТЬ */}
         <div className="navbar-right">
           {isGuest && (
             <div className="navbar-actions">
@@ -34,7 +35,6 @@ export default function Navbar() {
             </div>
           )}
 
-          {/* profile */}
           <div className="navbar-user">
             <div className="avatar-wrapper">
               {userAvatar ? (
@@ -46,7 +46,7 @@ export default function Navbar() {
             <span className="username">{userName}</span>
           </div>
 
-          {/* menuu */}
+          {/* БУРГЕР */}
           <div
             className={`hamburger ${isOpen ? "active" : ""}`}
             onClick={() => setIsOpen(!isOpen)}
@@ -58,12 +58,12 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Мобильное меню */}
+      {/* МОБИЛЬНОЕ МЕНЮ */}
       <div className={`mobile-menu ${isOpen ? "open" : ""}`}>
         <ul className="mobile-links">
           <li><Link to="/" onClick={() => setIsOpen(false)}>Главная</Link></li>
           <li><Link to="/about" onClick={() => setIsOpen(false)}>О проекте</Link></li>
-          <li><Link to="/courses" onClick={() => setIsOpen(false)}>Уроки</Link></li>
+          <li><Link to="/lessons" onClick={() => setIsOpen(false)}>Уроки</Link></li>
         </ul>
 
         {isGuest && (
