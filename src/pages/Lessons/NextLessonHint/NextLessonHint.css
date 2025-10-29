@@ -1,0 +1,42 @@
+.next-lesson-hint {
+  background-color: #fffef7;
+  border-left: 5px solid orange;
+  border-radius: 8px;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 1rem;
+  color: #333;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto 25px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.hint-block p {
+  margin: 0 0 6px 0;
+}
+
+.hint-block strong {
+  color: #d87a00;
+}
+
+.hint-btn {
+  background-color: orange;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.hint-btn:hover {
+  background-color: #e69500;
+}
+
+.hint-btn:active {
+  transform: scale(0.97);
+}

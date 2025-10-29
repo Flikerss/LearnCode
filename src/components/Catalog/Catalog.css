@@ -8,7 +8,7 @@
   background: #fff;
   border-radius: 12px;
   padding: 20px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
 }
 
 .chapter-header {
@@ -16,71 +16,106 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 15px;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .chapter-header h3 {
-  font-size: 1.5rem;
-  color: #333;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #222;
+  margin: 0;
 }
 
 .progress-bar {
   flex: 1;
-  height: 8px;
+  height: 10px;
   background: #eee;
-  border-radius: 8px;
-  margin-left: 20px;
+  border-radius: 10px;
   overflow: hidden;
 }
 
 .progress {
   height: 100%;
   background: orange;
-  border-radius: 8px;
+  border-radius: 10px;
+  transition: width 0.3s ease;
 }
 
 .lessons-list {
   display: flex;
   flex-wrap: wrap;
   gap: 15px;
+  margin-top: 10px;
 }
 
 .lesson-card {
   flex: 1 1 200px;
   min-width: 180px;
-  background: #f5f5f5;
-  padding: 12px 16px;
-  border-radius: 8px;
+  background: #fdfdfd;
+  padding: 14px 18px;
+  border-radius: 10px;
   cursor: pointer;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  transition: transform 0.2s, box-shadow 0.2s, border 0.2s;
 }
 
 .lesson-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
 }
 
 .lesson-card.completed {
-  background: #e0f7ff;
+  background: #e6f7ff;
   border: 1px solid #00bfff;
 }
 
 .lesson-card.next {
   border: 2px solid orange;
   background: #fff4e5;
-  position: relative;
+}
+
+.lesson-card .lesson-title {
+  font-weight: 500;
+  color: #333;
+  flex: 1;
+}
+
+.lesson-card .lesson-duration {
+  font-size: 0.85rem;
+  color: #666;
+  margin-left: 10px;
+  white-space: nowrap;
 }
 
 .lesson-card .hint {
-  font-size: 0.8rem;
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: orange;
+  color: #fff;
+  font-size: 0.7rem;
   font-weight: 600;
-  color: orange;
+  padding: 3px 6px;
+  border-radius: 6px;
 }
 
 @media (max-width: 900px) {
   .lessons-list {
     flex-direction: column;
+  }
+}
+
+@media (max-width: 600px) {
+  .chapter-header h3 {
+    font-size: 1.4rem;
+  }
+
+  .lesson-card {
+    padding: 12px 14px;
   }
 }

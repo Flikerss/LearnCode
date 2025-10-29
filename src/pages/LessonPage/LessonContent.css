@@ -1,0 +1,26 @@
+.lesson-content {
+  flex: 1;
+  background: #fff;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.lesson-content h2 {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+}
+
+.lesson-block {
+  margin-bottom: 25px;
+}
+
+.lesson-block h3 {
+  color: #007bff;
+  margin-bottom: 10px;
+}
+
+.lesson-block p {
+  line-height: 1.6;
+  color: #444;
+}
