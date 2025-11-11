@@ -11,6 +11,34 @@
   margin-bottom: 20px;
 }
 
+@media (max-width: 768px) {
+  .lesson-content {
+    padding: 20px;
+  }
+
+  .lesson-content h2 {
+    font-size: 1.5rem;
+  }
+
+  .lesson-block h3 {
+    font-size: 1.2rem;
+  }
+
+  .lesson-block p {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .lesson-content {
+    padding: 15px;
+  }
+
+  .lesson-content h2 {
+    font-size: 1.3rem;
+  }
+}
+
 .lesson-block {
   margin-bottom: 25px;
 }

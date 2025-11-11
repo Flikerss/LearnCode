@@ -1,0 +1,127 @@
+.profile-progress-main {
+  display: flex;
+  align-items: center; 
+  justify-content: space-between;
+  gap: 18px;
+  width: 100%;
+  padding: 6px 4px;
+}
+
+.progress-left {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin-top: 20px;
+  min-width: 0;
+  justify-content: center;
+}
+
+
+.bar {
+  width: 100%;
+  height: 12px; 
+  border-radius: 10px;
+  background-color: #eee;
+  overflow: hidden;
+  margin-top: 6px; 
+}
+
+.fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ffa500, #ffcd66);
+  border-radius: 10px;
+  transition: width 0.6s ease-out;
+}
+
+.lessons-count {
+  font-size: 0.8rem;
+  margin-top: 12px; /* немного ниже под полосой */
+  color: #555;
+  font-weight: 500;
+}
+
+.num {
+  font-weight: 600;
+  color: #333;
+  font-size: 1rem;
+  min-width: 50px;
+  text-align: right;
+}
+
+.more-btn {
+  padding: 8px 14px;
+  background: orange;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s;
+  white-space: nowrap;
+  align-self: center;
+}
+
+.more-btn:hover {
+  background: darkorange;
+}
+
+/* остальное без изменений */
+.progress-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 55;
+}
+
+.progress-modal-box {
+  background: white;
+  padding: 26px;
+  border-radius: 14px;
+  min-width: 420px;
+  max-width: 800px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
+}
+
+.progress-modal-box h2 {
+  font-size: 1.3rem;
+  margin-bottom: 18px;
+  color: #333;
+}
+
+.chapter-line {
+  display: grid;
+  grid-template-columns: 1fr 160px 45px;
+  align-items: center;
+  gap: 12px;
+  margin: 10px 0;
+}
+
+.chapter-line > span:first-child {
+  white-space: nowrap;
+}
+
+.bar.small {
+  width: 160px;
+}
+
+.num.small {
+  font-size: 0.85rem;
+}
+
+.close-btn {
+  margin-top: 20px;
+  width: 100%;
+  padding: 10px;
+  background: #f3f3f3;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.close-btn:hover {
+  background: #e8e8e8;
+}

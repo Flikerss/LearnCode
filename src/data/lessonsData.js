@@ -3,7 +3,17 @@ export const lessonsData = [
     id: "intro",
     title: "Введение в JavaScript",
     chapter: "Глава 1: Основы JS",
-    theory: "JavaScript — это язык программирования, который используется для создания динамических веб-страниц.",
+    theory:
+      "JavaScript — это язык программирования, который используется для создания динамических веб-страниц.",
+    practice: "Попробуй написать alert('Привет, мир!');",
+    duration: "5 мин",
+  },
+  {
+    id: "into",
+    title: "xldgkhjsd;gokhjs;zJavaScript",
+    chapter: "Глава 1: Основы JS",
+    theory:
+      "JavaScript — это язык программирования, который используется для создания динамических веб-страниц.",
     practice: "Попробуй написать alert('Привет, мир!');",
     duration: "5 мин",
   },
@@ -24,9 +34,17 @@ export const lessonsData = [
     duration: "8 мин",
   },
   {
+    id: "functions1",
+    title: "Фции",
+    chapter: "Глава 1: Основы JS",
+    theory: "Функции позволяют группировать код для повторного использования.",
+    practice: "Создай функцию, которая принимает имя и выводит приветствие.",
+    duration: "8 мин",
+  },
+  {
     id: "arrays",
     title: "Массивы",
-    chapter: "Глава 2: DOM и события",
+    chapter: "Глава 2: DOM и событияffffffuuuuuuuuuuuu",
     theory: "Массивы используются для хранения коллекций данных.",
     practice: "Создай массив и выведи длину массива в консоль.",
     duration: "6 мин",

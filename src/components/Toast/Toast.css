@@ -1,0 +1,40 @@
+.toast {
+  position: fixed;
+  top: 80px; /* 60px (высота навбара) + 20px отступ */
+  right: 20px;
+  padding: 12px 24px;
+  border-radius: 8px;
+  color: white;
+  animation: slideIn 0.3s ease-out;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  font-size: 0.95rem;
+}
+
+.toast.success {
+  background-color: #4caf50;
+}
+
+.toast.error {
+  background-color: #f44336;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .toast {
+    top: 70px; /* 60px (высота навбара) + 10px отступ для мобильных */
+    right: 10px;
+    left: 10px;
+    text-align: center;
+  }
+}

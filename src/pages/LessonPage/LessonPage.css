@@ -6,7 +6,6 @@
   margin-top: 60px;
   min-height: calc(100vh - 60px);
   box-sizing: border-box;
-  flex-wrap: wrap;
 }
 
 .lesson-content-wrapper {
@@ -15,7 +14,7 @@
   background: #fff;
   border-radius: 12px;
   padding: 30px 40px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
 .lesson-navigation {
@@ -24,6 +23,8 @@
   margin-top: 40px;
   padding-top: 20px;
   border-top: 1px solid #ddd;
+  gap: 15px;
+  flex-wrap: wrap;
 }
 
 .lesson-navigation button {
@@ -33,6 +34,9 @@
   padding: 10px 18px;
   border-radius: 6px;
   font-size: 16px;
+  flex: 1;
+  min-width: 140px;
+  text-align: center;
   cursor: pointer;
   transition: background 0.3s, transform 0.1s;
 }
@@ -54,5 +58,17 @@
 
   .lesson-content-wrapper {
     padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .lesson-navigation {
+    flex-direction: column;
+  }
+
+  .lesson-navigation button {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
   }
 }

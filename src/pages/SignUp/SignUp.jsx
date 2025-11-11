@@ -7,23 +7,22 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  try {
-    const res = await fetch("http://localhost:5000/user/signup", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, password }),
-    });
+    e.preventDefault();
+    try {
+      const res = await fetch("http://localhost:5000/user", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password }),
+      });
 
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || "Ошибка регистрации");
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Ошибка регистрации");
 
-    alert("Регистрация успешна! Теперь войдите в аккаунт.");
-  } catch (err) {
-    alert(err.message);
-  }
-};
-
+      alert("Регистрация успешна! Теперь войдите в аккаунт.");
+    } catch (err) {
+      alert(err.message);
+    }
+  };
 
   return (
     <section className="auth-page">
@@ -60,7 +59,9 @@ export default function SignUp() {
             />
           </label>
 
-          <button type="submit" className="btn-filled fullwidth">Зарегистрироваться</button>
+          <button type="submit" className="btn-filled fullwidth">
+            Зарегистрироваться
+          </button>
         </form>
       </div>
     </section>

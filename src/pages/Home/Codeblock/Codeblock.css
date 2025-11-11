@@ -1,0 +1,42 @@
+.code-container {
+  background-color: #fff;
+  border: 1px solid #e2e8f0;
+  margin: 0 0 20px 0;
+  padding: 1rem;
+  border-radius: 8px;
+  width: auto;
+  display: inline-block;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.code-block {
+  font-size: 1.8rem;
+  line-height: 1.2;
+  white-space: nowrap;
+  margin: 0;
+}
+
+.keyword {
+  color: #e23d28;
+}
+
+.operator {
+  color: #333;
+}
+
+.string {
+  color: #008000;
+}
+
+.cursor {
+  display: inline-block;
+  width: 8px;
+  background-color: #333;
+  animation: blink 0.9s step-end infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}

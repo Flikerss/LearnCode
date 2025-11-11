@@ -4,6 +4,7 @@ import Advantages from "../../components/Advantages";
 import Reviews from "../../components/Reviews";
 import Courses from "../../components/Courses";
 import Footer from "../../components/Footer";
+import Codeblock from "./Codeblock/Codeblock";
 
 export default function Home() {
   const scrollToCourses = () => {
@@ -14,9 +15,8 @@ export default function Home() {
     <>
       <section className="home">
         <div className="home-content">
-          <h1>LearnCode на связи</h1>
+          <Codeblock />
           <p>Изучай JavaScript и создавай реальные проекты вместе с нами!</p>
-
           <button className="start-btn" onClick={scrollToCourses}>
             Начать обучение
           </button>

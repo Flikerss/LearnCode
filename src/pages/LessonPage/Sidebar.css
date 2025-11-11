@@ -3,12 +3,34 @@
   flex-shrink: 0;
   background-color: #fff;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   padding: 20px;
   height: fit-content;
   position: sticky;
   top: 80px;
   align-self: flex-start;
+}
+
+@media (max-width: 1024px) {
+  .lesson-sidebar {
+    width: 100%;
+    position: static;
+  }
+}
+
+@media (max-width: 600px) {
+  .lesson-sidebar {
+    padding: 15px;
+  }
+
+  .chapter-title {
+    font-size: 1rem;
+  }
+
+  .lesson-list a {
+    padding: 6px 10px;
+    font-size: 0.9rem;
+  }
 }
 
 .chapter-block {

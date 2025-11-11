@@ -1,42 +1,63 @@
 .next-lesson-hint {
-  background-color: #fffef7;
-  border-left: 5px solid orange;
-  border-radius: 8px;
-  padding: 16px 20px;
   display: flex;
   flex-direction: column;
   gap: 12px;
-  font-size: 1rem;
-  color: #333;
-  width: 100%;
-  max-width: 600px;
-  margin: 0 auto 25px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  padding: 20px;
+  margin: 20px auto 30px;
+  max-width: 800px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #fff7e6, #fff);
+  box-shadow: 0 2px 12px rgba(255, 165, 0, 0.15);
+  border: 1px solid rgba(255, 165, 0, 0.3);
+  animation: fadeIn 0.4s ease;
+}
+
+.hint-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 14px 18px;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid rgba(255, 165, 0, 0.3);
+  box-shadow: 0 2px 6px rgba(255, 165, 0, 0.1);
+  transition: all 0.25s ease;
+}
+
+.hint-block:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(255, 165, 0, 0.2);
 }
 
 .hint-block p {
-  margin: 0 0 6px 0;
+  margin: 0 0 8px;
+  font-size: 1rem;
+  color: #333;
 }
 
 .hint-block strong {
-  color: #d87a00;
+  color: #e67e22;
 }
 
 .hint-btn {
-  background-color: orange;
-  color: #fff;
+  background-color: #ffa500;
+  color: white;
+  font-weight: 600;
   border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-size: 0.95rem;
+  padding: 10px 18px;
+  border-radius: 10px;
   cursor: pointer;
-  transition: background 0.2s, transform 0.1s;
+  font-size: 0.95rem;
+  transition: all 0.25s ease;
 }
 
 .hint-btn:hover {
-  background-color: #e69500;
+  background-color: #ff8c00;
+  box-shadow: 0 3px 8px rgba(255, 140, 0, 0.4);
+  transform: translateY(-1px);
 }
 
-.hint-btn:active {
-  transform: scale(0.97);
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
