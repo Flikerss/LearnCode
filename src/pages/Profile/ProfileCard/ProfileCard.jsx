@@ -2,10 +2,12 @@ import React from "react";
 import "./ProfileCard.css";
 
 export default function ProfileCard({ user, onLogout }) {
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
-    window.location.href = "/";
+  const handleLogout = async () => {
+    if (typeof onLogout === "function") {
+      await onLogout();
+    } else {
+      window.location.href = "/";
+    }
   };
 
   return (
@@ -43,4 +45,4 @@ export default function ProfileCard({ user, onLogout }) {
       </button>
     </div>
   );
-} 
+}

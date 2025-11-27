@@ -1,26 +1,30 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
 import "./SignUp.css";
 
 export default function SignUp() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const auth = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!auth?.register) {
+      console.error("Регистрация недоступна: AuthContext не подцепился");
+      return;
+    }
+    setLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/user", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password }),
-      });
-
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Ошибка регистрации");
-
-      alert("Регистрация успешна! Теперь войдите в аккаунт.");
+      await auth.register({ name, email, password });
+      navigate("/profile", { replace: true });
     } catch (err) {
-      alert(err.message);
+      // toast уже показан внутри AuthContext.register
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -59,8 +63,12 @@ export default function SignUp() {
             />
           </label>
 
-          <button type="submit" className="btn-filled fullwidth">
-            Зарегистрироваться
+          <button
+            type="submit"
+            className="btn-filled fullwidth"
+            disabled={loading}
+          >
+            {loading ? "Регистрирую..." : "Зарегистрироваться"}
           </button>
         </form>
       </div>

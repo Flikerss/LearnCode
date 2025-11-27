@@ -13,11 +13,9 @@ export default function Navbar() {
   const userName = user ? user.name : "Гость";
   const userAvatar = user ? user.avatar : null;
 
-  const handleLogout = () => {
-    if (auth && typeof auth.logout === "function") auth.logout();
-    else {
-      localStorage.removeItem("user");
-      localStorage.removeItem("token");
+  const handleLogout = async () => {
+    if (auth && typeof auth.logout === "function") {
+      await auth.logout();
     }
     navigate("/");
   };
@@ -58,7 +56,11 @@ export default function Navbar() {
               </Link>
             </div>
           ) : (
-            <div className="navbar-user" onClick={handleProfileClick}>
+            <Link
+              to="/profile"
+              className="navbar-user"
+              onClick={() => setIsOpen(false)}
+            >
               <div className="avatar-wrapper">
                 {userAvatar ? (
                   <img src={userAvatar} alt={userName} className="avatar" />
@@ -69,7 +71,7 @@ export default function Navbar() {
                 )}
               </div>
               <span className="username">{userName}</span>
-            </div>
+            </Link>
           )}
 
           <div

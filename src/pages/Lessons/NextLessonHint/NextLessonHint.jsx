@@ -5,7 +5,7 @@ import "./NextLessonHint.css";
 export default function NextLessonHint({ lastLesson, nextLesson }) {
   const navigate = useNavigate();
 
-  // Если нет ни последнего, ни следующего — скрываем подсказку
+
   if (!lastLesson && !nextLesson) return null;
 
   return (

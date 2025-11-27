@@ -1,4 +1,3 @@
-/* Достижения */
 .profile-achievements {
   grid-column: 2;
   grid-row: 1;
@@ -6,7 +5,7 @@
   border-radius: 15px;
   padding: 25px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  margin-top: 60px; /* Убрали отступ сверху */
+  margin-top: 60px;
   display: flex;
   flex-direction: column;
   height: fit-content;
@@ -18,7 +17,6 @@
   font-size: 1.3rem;
 }
 
-/* Сетка достижений - 4 в ряд горизонтально */
 .achievements-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -51,7 +49,6 @@
   opacity: 0.6;
 }
 
-/* Область для картинки/иконки */
 .achievement-image {
   height: 60px;
   width: 60px;
@@ -66,7 +63,6 @@
   font-size: 2.5rem;
 }
 
-/* Текст смещен ниже */
 .achievement-text {
   margin-top: auto;
   padding-top: 10px;
@@ -98,13 +94,12 @@
   color: white;
 }
 
-/* Адаптивность */
 @media (max-width: 1024px) {
   .achievements-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 15px;
   }
-  
+
   .achievement-card {
     min-height: 130px;
     aspect-ratio: 4/3;
@@ -115,20 +110,20 @@
   .profile-achievements {
     margin-top: 0;
   }
-  
+
   .achievements-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
   .achievement-card {
     min-height: 120px;
   }
-  
+
   .achievement-image {
     height: 50px;
     width: 50px;
   }
-  
+
   .ach-icon {
     font-size: 2rem;
   }
@@ -138,12 +133,12 @@
   .profile-achievements {
     padding: 20px;
   }
-  
+
   .achievements-grid {
     grid-template-columns: 1fr;
     gap: 12px;
   }
-  
+
   .achievement-card {
     min-height: 80px;
     aspect-ratio: auto;
@@ -153,22 +148,22 @@
     text-align: left;
     gap: 15px;
   }
-  
+
   .achievement-image {
     height: 45px;
     width: 45px;
     margin-bottom: 0;
   }
-  
+
   .ach-icon {
     font-size: 1.8rem;
   }
-  
+
   .achievement-text {
     margin-top: 0;
     padding-top: 0;
   }
-  
+
   .achievement-card p {
     font-size: 0.85rem;
   }

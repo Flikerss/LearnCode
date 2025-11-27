@@ -1,76 +1,65 @@
-/* Основной контейнер */
 .profile-wrapper {
   min-height: 100vh;
   background-color: #f5f5f5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Шапка с красивым оранжевым градиентом */
 .profile-header {
   height: 200px;
-  background: linear-gradient(135deg, 
-    #ff6b00 0%, 
-    #ff8c00 25%, 
-    #ffa500 50%, 
-    #ff8c00 75%, 
-    #ff6b00 100%);
+  background: linear-gradient(
+    135deg,
+    #ff6b00 0%,
+    #ff8c00 25%,
+    #ffa500 50%,
+    #ff8c00 75%,
+    #ff6b00 100%
+  );
   width: 100%;
   position: relative;
   overflow: hidden;
+  background-size: cover;
+  background-position: center;
 }
 
-/* Добавляем легкий узор для глубины */
 .profile-header::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: 
-    radial-gradient(circle at 20% 80%, rgba(255,255,255,0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(255,255,255,0.1) 0%, transparent 50%),
-    radial-gradient(circle at 40% 40%, rgba(255,255,255,0.05) 0%, transparent 50%);
+  background: radial-gradient(
+      circle at 20% 80%,
+      rgba(255, 255, 255, 0.1) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 20%,
+      rgba(255, 255, 255, 0.1) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 40% 40%,
+      rgba(255, 255, 255, 0.05) 0%,
+      transparent 50%
+    );
   pointer-events: none;
 }
 
-/* Альтернативный вариант градиента - более плавный */
-/* .profile-header {
-  height: 200px;
-  background: linear-gradient(135deg, 
-    #ff7b00 0%, 
-    #ff9500 30%, 
-    #ffaa00 60%, 
-    #ff9500 85%, 
-    #ff7b00 100%);
-  width: 100%;
-} */
-
-/* Еще один вариант - яркий оранжевый */
-/* .profile-header {
-  height: 200px;
-  background: linear-gradient(135deg, 
-    #ff7700 0%, 
-    #ff8a00 25%, 
-    #ff9d00 50%, 
-    #ffb000 75%, 
-    #ffc300 100%);
-  width: 100%;
-} */
-
-/* Основной блок */
 .profile-main {
   display: grid;
   grid-template-columns: 300px 1fr;
   grid-template-rows: auto auto;
   gap: 20px;
-  padding: 20px;
+  padding: 20px 24px;
   max-width: 1200px;
   margin: -60px auto 0;
   position: relative;
   z-index: 1;
+  box-sizing: border-box;
 }
 
-/* Область прогресса */
 .profile-progress-area {
   grid-column: 1 / span 2;
   grid-row: 2;
@@ -79,6 +68,7 @@
   padding: 25px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   margin-top: 0;
+  overflow: hidden;
 }
 
 .profile-progress-area h3 {
@@ -87,31 +77,108 @@
   font-size: 1.3rem;
 }
 
-/* Адаптивность */
+.back-btn {
+  position: absolute;
+  top: 20px;
+  left: 24px;
+  background-color: #ffffff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+  font-weight: 500;
+  color: #333;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.back-btn:hover {
+  background-color: #f2f2f2;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 1024px) {
+  .profile-main {
+    max-width: 940px;
+    padding: 20px;
+    gap: 18px;
+    grid-template-columns: 260px 1fr;
+  }
+}
+
 @media (max-width: 768px) {
   .profile-main {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto auto auto;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
     margin-top: -40px;
-    padding: 15px;
+    padding: 16px;
   }
-  
-  .profile-progress-area {
-    grid-column: 1;
-  }
-  
+
   .profile-header {
-    height: 150px;
+    height: 140px;
+  }
+
+  .profile-progress-area {
+    border-radius: 12px;
+    padding: 20px;
+  }
+
+  .back-btn {
+    top: 16px;
+    left: 16px;
+    padding: 8px 14px;
+    font-size: 14px;
   }
 }
 
 @media (max-width: 480px) {
-  .profile-main {
-    gap: 15px;
-    margin-top: -30px;
+  .profile-header {
+    height: 120px;
+    background-position: 50% 40%;
   }
-  
+
+  .profile-main {
+    margin-top: -30px;
+    padding: 12px;
+    gap: 14px;
+  }
+
   .profile-progress-area {
-    padding: 20px;
+    padding: 16px;
+    border-radius: 10px;
+  }
+
+  .profile-progress-area h3 {
+    font-size: 1.05rem;
+    margin-bottom: 14px;
+  }
+
+  .back-btn {
+    top: 12px;
+    left: 12px;
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 360px) {
+  .profile-header {
+    height: 110px;
+  }
+
+  .profile-progress-area {
+    padding: 12px;
+  }
+
+  .profile-progress-area h3 {
+    font-size: 1rem;
+  }
+
+  .back-btn {
+    font-size: 12px;
+    padding: 6px 10px;
   }
 }

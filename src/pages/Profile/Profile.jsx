@@ -1,22 +1,27 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Profile.css";
 import { lessonsData as staticLessons } from "../../data/lessonsData";
-import ProgressBar from "./progressbar/ProgressBar";
+import ProgressBar from "./Progressbar/Progressbar";
 import ProfileCard from "./ProfileCard/ProfileCard";
 import Achievements from "./Achievements/Achievements";
+import { AuthContext } from "../../context/AuthContext";
+import ProfileSkeleton from "./ProfileSkeleton";
 
 export default function Profile() {
   const [lessonsData] = useState(staticLessons);
-  const [user, setUser] = useState(null);
   const [completedLessons, setCompletedLessons] = useState([]);
+  const { user, isAuthLoading, logout } = useContext(AuthContext) || {};
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const savedUser = localStorage.getItem("user");
-    if (savedUser) setUser(JSON.parse(savedUser));
-
     const completedRaw = localStorage.getItem("completedLessons");
     if (completedRaw) setCompletedLessons(JSON.parse(completedRaw));
   }, []);
+
+  if (isAuthLoading) {
+    return <ProfileSkeleton />;
+  }
 
   if (!user) {
     return (
@@ -26,17 +31,20 @@ export default function Profile() {
     );
   }
 
+  const goToMain = () => {
+    navigate("/");
+  };
+
   return (
     <div className="profile-wrapper">
-      {/* Шапка */}
-      <div className="profile-header"></div>
-
-      {/* Основной блок */}
+      <div className="profile-header">
+        <button className="back-btn" onClick={goToMain}>
+          На главную
+        </button>
+      </div>
       <div className="profile-main">
-        <ProfileCard user={user} />
+        <ProfileCard user={user} onLogout={logout} />
         <Achievements />
-        
-        {/* Прогресс обучения */}
         <div className="profile-progress-area">
           <h3>Прогресс обучения</h3>
           <ProgressBar

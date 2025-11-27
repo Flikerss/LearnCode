@@ -50,25 +50,6 @@ input:focus {
   border-color: orange;
 }
 
-.input-error {
-  border-color: #e74c3c;
-}
-
-.field-error {
-  color: #e74c3c;
-  font-size: 0.85rem;
-  margin-top: 6px;
-}
-
-.form-error {
-  background: #ffecec;
-  color: #c0392b;
-  padding: 10px 12px;
-  border-radius: 6px;
-  margin-bottom: 8px;
-  font-size: 0.95rem;
-}
-
 .btn-filled.fullwidth {
   width: 100%;
   padding: 10px;

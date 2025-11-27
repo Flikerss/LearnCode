@@ -1,6 +1,6 @@
 .toast {
   position: fixed;
-  top: 80px; /* 60px (высота навбара) + 20px отступ */
+  top: 80px; 
   right: 20px;
   padding: 12px 24px;
   border-radius: 8px;
@@ -32,7 +32,7 @@
 
 @media (max-width: 768px) {
   .toast {
-    top: 70px; /* 60px (высота навбара) + 10px отступ для мобильных */
+    top: 70px;
     right: 10px;
     left: 10px;
     text-align: center;

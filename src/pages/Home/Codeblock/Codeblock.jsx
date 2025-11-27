@@ -5,8 +5,7 @@ export default function Codeblock() {
   const words = [
     "const app = 'LearnCode'",
     "function LearnCode() { }",
-    "class LearnCode extends Knowledge",
-    "import { LearnCode } from 'future'",
+    "Начать обучение.....",
   ];
 
   const [displayed, setDisplayed] = useState("");

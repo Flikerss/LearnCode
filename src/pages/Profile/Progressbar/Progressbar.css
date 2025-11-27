@@ -35,7 +35,7 @@
 
 .lessons-count {
   font-size: 0.8rem;
-  margin-top: 12px; /* немного ниже под полосой */
+  margin-top: 12px; 
   color: #555;
   font-weight: 500;
 }
@@ -65,7 +65,7 @@
   background: darkorange;
 }
 
-/* остальное без изменений */
+
 .progress-modal {
   position: fixed;
   inset: 0;

@@ -5,7 +5,6 @@ import "./ProgressBar.css";
 export default function ProgressBar({ completedLessons, lessonsData }) {
   const [open, setOpen] = useState(false);
 
-  // === chapters grouping ===
   const chapters = useMemo(() => {
     const map = {};
     lessonsData.forEach((l) => {
@@ -18,7 +17,6 @@ export default function ProgressBar({ completedLessons, lessonsData }) {
     }));
   }, [lessonsData]);
 
-  // === restore from session ===
   const initialProgress = (() => {
     try {
       const saved = sessionStorage.getItem("profileChapterProgress");
@@ -59,7 +57,6 @@ export default function ProgressBar({ completedLessons, lessonsData }) {
     anim.current[chapter] = requestAnimationFrame(step);
   };
 
-  // === recalc when completedLessons change ===
   useEffect(() => {
     chapters.forEach((ch) => {
       const count = ch.lessons.filter((l) =>
@@ -83,7 +80,6 @@ export default function ProgressBar({ completedLessons, lessonsData }) {
     );
   }, [completedLessons, chapters]);
 
-  // === overall percent ===
   const overallPercent = useMemo(() => {
     return Math.round((completedLessons.length / lessonsData.length) * 100);
   }, [lessonsData, completedLessons]);
