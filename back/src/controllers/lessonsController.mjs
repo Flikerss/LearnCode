@@ -3,17 +3,37 @@ import { ObjectId } from 'mongodb';
 const PROGRESS_INCREMENT = 4;
 
 export default (client, JUDGE0_URL, JUDGE0_API_KEY) => {
-    // --- CRUD ---
     const createLesson = async (req, res) => {
-        const { title, theory, interactiveUrl, practiceTask, expectedOutput, languageId, testCases } = req.body;
+        const { 
+            title, 
+            theory, 
+            interactiveUrl, 
+            practiceTask, 
+            expectedOutput, 
+            languageId, 
+            testCases,
+            chapter,
+            chapterTitle,
+            duration
+        } = req.body;
         try {
             if (!title || !theory || !practiceTask) {
                 return res.status(400).json({ error: 'Название, теория и практика обязательны' });
             }
 
+            let normalizedTheory = theory;
+            if (typeof theory === 'string') {
+                normalizedTheory = [{ body: theory }];
+            } else if (Array.isArray(theory) && theory.length > 0 && typeof theory[0] === 'string') {
+                normalizedTheory = theory.map(t => ({ body: t }));
+            }
+
             const newLesson = {
                 title,
-                theory,
+                theory: normalizedTheory,
+                chapter: chapter || chapterTitle || "",
+                chapterTitle: chapterTitle || chapter || "",
+                duration: duration || null,
                 interactiveUrl: interactiveUrl || null,
                 practiceTask: {
                     description: practiceTask,
@@ -34,15 +54,64 @@ export default (client, JUDGE0_URL, JUDGE0_API_KEY) => {
                 lesson: newLesson 
             });
         } catch (error) {
+            console.error("Ошибка создания урока:", error);
             res.status(500).json({ error: error.message });
         }
     };
 
     const getAllLessons = async (req, res) => {
         try {
-            const lessons = await client.db("main").collection("lessons").find({}).toArray();
-            res.status(200).json(lessons);
+            const { userId } = req.user || {};
+            const { chapterId, limit, offset } = req.query;
+            
+            const query = {};
+            if (chapterId) {
+                query.chapterId = new ObjectId(chapterId);
+            }
+
+            const lessonsQuery = client.db("main").collection("lessons").find(query).sort({ order: 1, createdAt: 1 });
+            
+            if (limit) {
+                lessonsQuery.limit(parseInt(limit));
+            }
+            if (offset) {
+                lessonsQuery.skip(parseInt(offset));
+            }
+
+            const lessons = await lessonsQuery.toArray();
+            
+            let completedLessons = [];
+            if (userId) {
+                const user = await client.db("main").collection("user").findOne(
+                    { _id: new ObjectId(userId) },
+                    { projection: { completedLessons: 1 } }
+                );
+                completedLessons = user?.completedLessons?.map(id => id.toString()) || [];
+            }
+
+            const chapters = await client.db("main").collection("chapters").find({}).toArray();
+            const chaptersMap = chapters.reduce((acc, ch) => {
+                acc[ch._id.toString()] = ch;
+                return acc;
+            }, {});
+
+            const lessonsWithStatus = lessons.map(lesson => {
+                const chapter = lesson.chapterId ? chaptersMap[lesson.chapterId.toString()] : null;
+                return {
+                    ...lesson,
+                    id: lesson._id.toString(),
+                    chapter: chapter ? {
+                        id: chapter._id.toString(),
+                        title: chapter.title,
+                        description: chapter.description,
+                    } : null,
+                    isCompleted: completedLessons.includes(lesson._id.toString()),
+                };
+            });
+
+            res.status(200).json(lessonsWithStatus);
         } catch (error) {
+            console.error("Ошибка получения уроков:", error);
             res.status(500).json({ error: error.message });
         }
     };
@@ -54,17 +123,43 @@ export default (client, JUDGE0_URL, JUDGE0_API_KEY) => {
             if (!lesson) {
                 return res.status(404).json({ message: 'Урок не найден' });
             }
-            res.status(200).json(lesson);
+
+            const { userId } = req.user || {};
+            let isCompleted = false;
+            if (userId) {
+                const user = await client.db("main").collection("user").findOne(
+                    { _id: new ObjectId(userId) },
+                    { projection: { completedLessons: 1 } }
+                );
+                isCompleted = user?.completedLessons?.some(
+                    completedId => completedId.toString() === id
+                ) || false;
+            }
+
+            res.status(200).json({
+                ...lesson,
+                isCompleted,
+            });
         } catch (error) {
+            console.error("Ошибка получения урока:", error);
             res.status(500).json({ error: error.message });
         }
     };
 
     const updateLesson = async (req, res) => {
         const { id } = req.params;
-        const updateData = req.body;
+        const updateData = { ...req.body };
         try {
+            delete updateData._id;
             updateData.updatedAt = new Date();
+
+            if (updateData.theory) {
+                if (typeof updateData.theory === 'string') {
+                    updateData.theory = [{ body: updateData.theory }];
+                } else if (Array.isArray(updateData.theory) && updateData.theory.length > 0 && typeof updateData.theory[0] === 'string') {
+                    updateData.theory = updateData.theory.map(t => ({ body: t }));
+                }
+            }
 
             const result = await client.db("main").collection("lessons").updateOne(
                 { _id: new ObjectId(id) },
@@ -77,6 +172,7 @@ export default (client, JUDGE0_URL, JUDGE0_API_KEY) => {
 
             res.status(200).json({ message: 'Урок обновлен', lessonId: id });
         } catch (error) {
+            console.error("Ошибка обновления урока:", error);
             res.status(500).json({ error: error.message });
         }
     };
@@ -84,17 +180,22 @@ export default (client, JUDGE0_URL, JUDGE0_API_KEY) => {
     const deleteLesson = async (req, res) => {
         const { id } = req.params;
         try {
+            await client.db("main").collection("user").updateMany(
+                {},
+                { $pull: { completedLessons: new ObjectId(id) } }
+            );
+
             const result = await client.db("main").collection("lessons").deleteOne({ _id: new ObjectId(id) });
             if (result.deletedCount === 0) {
                 return res.status(404).json({ message: 'Урок не найден' });
             }
             res.status(200).json({ message: 'Урок удален', lessonId: id });
         } catch (error) {
+            console.error("Ошибка удаления урока:", error);
             res.status(500).json({ error: error.message });
         }
     };
 
-    // --- SUBMIT PRACTICE ---
     const submitLesson = async (req, res) => {
         const { lessonId } = req.params;
         const { code } = req.body;
@@ -118,14 +219,14 @@ export default (client, JUDGE0_URL, JUDGE0_API_KEY) => {
             );
 
             if (executionResult.success) {
-                const alreadyCompleted = lesson.completedBy.some(
-                    id => id.toString() === userId
+                const user = await client.db("main").collection("user").findOne({ _id: new ObjectId(userId) });
+                const completedLessons = user?.completedLessons || [];
+                const alreadyCompleted = completedLessons.some(
+                    id => id.toString() === lessonId
                 );
 
                 let progress = null;
                 if (!alreadyCompleted) {
-                    const user = await client.db("main").collection("user").findOne({ _id: new ObjectId(userId) });
-
                     const currentProgress = typeof user.progress === 'string'
                         ? parseInt(user.progress.replace('%', '')) || 0
                         : user.progress || 0;
@@ -134,12 +235,21 @@ export default (client, JUDGE0_URL, JUDGE0_API_KEY) => {
 
                     await client.db("main").collection("user").updateOne(
                         { _id: new ObjectId(userId) },
-                        { $set: { progress: newProgress } }
+                        { 
+                            $set: { 
+                                progress: newProgress,
+                                updatedAt: new Date()
+                            },
+                            $addToSet: { completedLessons: new ObjectId(lessonId) }
+                        }
                     );
 
                     await client.db("main").collection("lessons").updateOne(
                         { _id: new ObjectId(lessonId) },
-                        { $addToSet: { completedBy: new ObjectId(userId) } }
+                        { 
+                            $addToSet: { completedBy: new ObjectId(userId) },
+                            $set: { updatedAt: new Date() }
+                        }
                     );
                     progress = { old: currentProgress, new: newProgress };
                 }
@@ -160,13 +270,11 @@ export default (client, JUDGE0_URL, JUDGE0_API_KEY) => {
                 });
             }
         } catch (error) {
+            console.error("Ошибка отправки решения:", error);
             res.status(500).json({ error: error.message });
         }
     };
 
-    // ----------------------------------------------------
-    // --- Вспомогательные функции ---
-    // ----------------------------------------------------
 
     async function executeCode(code, languageId, testCases, JUDGE0_URL, JUDGE0_API_KEY) {
         try {
@@ -285,6 +393,72 @@ export default (client, JUDGE0_URL, JUDGE0_API_KEY) => {
         }
     }
 
+    const getLessonContent = async (req, res) => {
+        const { lessonId } = req.params;
+        try {
+            const lesson = await client.db("main").collection("lessons").findOne({ _id: new ObjectId(lessonId) });
+            if (!lesson) {
+                return res.status(404).json({ message: 'Урок не найден' });
+            }
+
+            res.status(200).json({
+                theory: lesson.theory,
+                practice: lesson.practiceTask,
+                interactiveUrl: lesson.interactiveUrl,
+                media: lesson.media || [],
+            });
+        } catch (error) {
+            console.error("Ошибка получения контента урока:", error);
+            res.status(500).json({ error: error.message });
+        }
+    };
+
+    const markLessonCompleted = async (req, res) => {
+        const { lessonId } = req.params;
+        const { userId } = req.user || {};
+        try {
+            if (!userId) {
+                return res.status(401).json({ error: "Необходимо авторизоваться" });
+            }
+
+            const lesson = await client.db("main").collection("lessons").findOne({ _id: new ObjectId(lessonId) });
+            if (!lesson) {
+                return res.status(404).json({ error: "Урок не найден" });
+            }
+
+            await client.db("main").collection("user_lessons").updateOne(
+                {
+                    userId: new ObjectId(userId),
+                    lessonId: new ObjectId(lessonId),
+                },
+                {
+                    $set: {
+                        userId: new ObjectId(userId),
+                        lessonId: new ObjectId(lessonId),
+                        chapterId: lesson.chapterId ? new ObjectId(lesson.chapterId) : null,
+                        status: "completed",
+                        completedAt: new Date(),
+                        updatedAt: new Date(),
+                    },
+                },
+                { upsert: true }
+            );
+
+            await client.db("main").collection("user").updateOne(
+                { _id: new ObjectId(userId) },
+                {
+                    $addToSet: { completedLessons: new ObjectId(lessonId) },
+                    $set: { lastActivityDate: new Date(), updatedAt: new Date() },
+                }
+            );
+
+            res.status(200).json({ message: "Урок отмечен как завершенный" });
+        } catch (error) {
+            console.error("Ошибка отметки урока:", error);
+            res.status(500).json({ error: error.message });
+        }
+    };
+
     return {
         createLesson,
         getAllLessons,
@@ -292,5 +466,7 @@ export default (client, JUDGE0_URL, JUDGE0_API_KEY) => {
         updateLesson,
         deleteLesson,
         submitLesson,
+        getLessonContent,
+        markLessonCompleted,
     };
 };
