@@ -1,0 +1,136 @@
+.lesson-compiler {
+  margin-top: 32px;
+  background: #0f172a;
+  border-radius: 12px;
+  color: #e2e8f0;
+  font-family: "JetBrains Mono", "Fira Code", Consolas, monospace;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.35);
+  overflow: hidden;
+}
+
+.compiler-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  background: linear-gradient(120deg, #111827, #1f2937);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+  gap: 16px;
+}
+
+.compiler-meta {
+  flex: 1;
+  font-size: 0.9rem;
+  color: #cbd5f5;
+}
+
+.compiler-lang select {
+  background: rgba(15, 23, 42, 0.8);
+  color: #f8fafc;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  border-radius: 8px;
+  padding: 6px 10px;
+}
+
+.compiler-body {
+  background: #0b1120;
+}
+
+.compiler-editor {
+  width: 100%;
+  min-height: 240px;
+  border: none;
+  background: transparent;
+  color: #f8fafc;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  padding: 24px;
+  resize: vertical;
+  outline: none;
+}
+
+.compiler-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 24px 20px;
+  background: #0b1120;
+  border-top: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.compiler-actions button {
+  background: linear-gradient(120deg, #22d3ee, #3b82f6);
+  border: none;
+  color: #0f172a;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.1s ease, opacity 0.2s ease;
+}
+
+.compiler-actions button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.compiler-actions button:not(:disabled):active {
+  transform: scale(0.98);
+}
+
+.compiler-error {
+  color: #f87171;
+  font-size: 0.9rem;
+}
+
+.compiler-status {
+  padding: 12px 24px;
+  border-top: 1px solid rgba(148, 163, 184, 0.2);
+  background: rgba(34, 197, 94, 0.08);
+}
+
+.compiler-status--error,
+.compiler-status--failed,
+.compiler-status--rejected {
+  background: rgba(248, 113, 113, 0.08);
+}
+
+.compiler-results {
+  padding: 16px 24px 24px;
+  background: #0b1120;
+}
+
+.compiler-results table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.compiler-results th,
+.compiler-results td {
+  padding: 10px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+  text-align: left;
+}
+
+.compiler-results td.passed {
+  color: #4ade80;
+  font-weight: 600;
+}
+
+.compiler-results td.failed {
+  color: #f87171;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .compiler-header {
+    flex-wrap: wrap;
+  }
+  .compiler-lang {
+    width: 100%;
+  }
+  .compiler-lang select {
+    width: 100%;
+  }
+}

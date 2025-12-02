@@ -7,7 +7,8 @@ import LessonContent from "./LessonContent";
 import { lessonsData as staticLessons } from "../../data/lessonsData";
 import LessonPageSkeleton from "./LessonPageSkeleton";
 import { useLoadingDelay } from "../../components/Skeleton/useLoadingDelay";
-import { fetchLessons } from "../../api/lessons";
+import { fetchLessons, fetchLessonById } from "../../api/lessons";
+import LessonCompiler from "./LessonCompiler";
 import "./LessonPage.css";
 
 export default function LessonPage() {
@@ -19,6 +20,8 @@ export default function LessonPage() {
   const [lessons, setLessons] = useState(staticLessons);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [lesson, setLesson] = useState(null);
+  const [lessonLoading, setLessonLoading] = useState(true);
 
   useEffect(() => {
     let active = true;
@@ -29,14 +32,20 @@ export default function LessonPage() {
         const data = await fetchLessons();
         if (!active) return;
         if (Array.isArray(data) && data.length) {
-          const normalized = data.map((l) => ({
-            id: l._id?.toString?.() || l.id,
-            title: l.title,
-            chapter: l.chapterTitle || l.chapter || "",
-            theory: l.theory?.[0]?.body || l.theory || "",
-            practice: l.practiceTask?.description || l.practice || "",
-            duration: l.duration ? `${l.duration} мин` : l.duration || "",
-          }));
+          const normalized = data.map((l) => {
+            const chapterTitle =
+              l.chapterTitle ||
+              (typeof l.chapter === "object" ? l.chapter?.title : l.chapter) ||
+              "";
+            return {
+              id: l._id?.toString?.() || l.id,
+              title: l.title,
+              chapter: chapterTitle,
+              theory: l.theory?.[0]?.body || l.theory || "",
+              practice: l.practiceTask?.description || l.practice || "",
+              duration: l.duration ? `${l.duration} мин` : l.duration || "",
+            };
+          });
           setLessons(normalized);
         } else {
           setLessons(staticLessons);
@@ -54,12 +63,53 @@ export default function LessonPage() {
   }, []);
 
   useEffect(() => {
-    if (!completed.includes(lessonId)) {
-      const updated = [...completed, lessonId];
-      setCompleted(updated);
+    setCompleted((prev) => {
+      if (prev.includes(lessonId)) {
+        return prev;
+      }
+      const updated = [...prev, lessonId];
       localStorage.setItem("completedLessons", JSON.stringify(updated));
-    }
+      return updated;
+    });
     localStorage.setItem("lastLessonId", lessonId);
+  }, [lessonId]);
+
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      try {
+        setLessonLoading(true);
+        const data = await fetchLessonById(lessonId);
+        if (!active) return;
+        const normalized = {
+          id: data?._id?.toString?.() || lessonId,
+          title: data?.title || "Урок",
+          theory: Array.isArray(data?.theory)
+            ? data.theory.map((block) =>
+                typeof block === "string" ? block : block?.body || ""
+              )
+            : data?.theory
+            ? [data.theory?.body || data.theory]
+            : [],
+          practice: data?.practiceTask?.description || data?.practice || "",
+          practiceTask: {
+            expectedOutput: data?.practiceTask?.expectedOutput || null,
+            languageId: data?.practiceTask?.languageId || 63,
+            testCases: data?.practiceTask?.testCases || [],
+          },
+          interactiveUrl: data?.interactiveUrl || null,
+        };
+        setLesson(normalized);
+      } catch (err) {
+        console.error("Не удалось загрузить урок", err);
+        setLesson(null);
+      } finally {
+        if (active) setLessonLoading(false);
+      }
+    })();
+    return () => {
+      active = false;
+    };
   }, [lessonId]);
 
   const currentIndex = useMemo(
@@ -72,7 +122,12 @@ export default function LessonPage() {
       ? lessons[currentIndex + 1]
       : null;
 
-  const showSkeleton = useLoadingDelay(loading, 200);
+  const showSkeleton = useLoadingDelay(
+    loading || lessonLoading,
+    200,
+    350,
+    true
+  );
 
   return (
     <>
@@ -81,9 +136,10 @@ export default function LessonPage() {
         <LessonPageSkeleton />
       ) : (
         <main className="lesson-page" aria-busy={showSkeleton || undefined}>
-          <Sidebar currentLesson={lessonId} />
+          <Sidebar currentLesson={lessonId} lessons={lessons} />
           <div className="lesson-content-wrapper">
-            <LessonContent lessonId={lessonId} />
+            <LessonContent lesson={lesson} isLoading={lessonLoading} />
+            <LessonCompiler lesson={lesson} lessonId={lessonId} />
             <div className="lesson-navigation">
               {prevLesson ? (
                 <button onClick={() => navigate(`/lessons/${prevLesson.id}`)}>
