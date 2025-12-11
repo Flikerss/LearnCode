@@ -29,7 +29,7 @@ export default function LessonCompiler({ lesson, lessonId }) {
     setResult(null);
     setError(null);
   }, [defaultLanguage, effectiveLessonId]);
-
+                                                                  
   async function handleRun() {
     if (!code.trim() || !effectiveLessonId) {
       setError("Добавьте код и попробуйте снова");

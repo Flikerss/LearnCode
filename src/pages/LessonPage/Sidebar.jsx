@@ -1,20 +1,26 @@
 import React, { useMemo } from "react";
 import { NavLink } from "react-router-dom";
-import { lessonsData } from "../../data/lessonsData";
 import "./Sidebar.css";
 
 export default function Sidebar({ currentLesson, lessons }) {
-  const source = lessons?.length ? lessons : lessonsData;
+  const source = lessons && lessons.length ? lessons : [];
 
   const chapters = useMemo(() => {
+    if (!Array.isArray(source) || source.length === 0) return [];
+
     const grouped = source.reduce((acc, lesson) => {
-      const chapterTitle = lesson.chapter || lesson.chapterTitle || "Уроки";
+      const chapterTitle =
+        typeof lesson.chapter === "object" && lesson.chapter !== null
+          ? lesson.chapter.title
+          : lesson.chapter || lesson.chapterTitle || "Уроки";
+
       if (!acc[chapterTitle]) {
         acc[chapterTitle] = [];
       }
       acc[chapterTitle].push(lesson);
       return acc;
     }, {});
+
     return Object.entries(grouped).map(([title, lessons]) => ({
       title,
       lessons,

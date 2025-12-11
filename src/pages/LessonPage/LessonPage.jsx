@@ -4,7 +4,6 @@ import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import Sidebar from "./Sidebar";
 import LessonContent from "./LessonContent";
-import { lessonsData as staticLessons } from "../../data/lessonsData";
 import LessonPageSkeleton from "./LessonPageSkeleton";
 import { useLoadingDelay } from "../../components/Skeleton/useLoadingDelay";
 import { fetchLessons, fetchLessonById } from "../../api/lessons";
@@ -17,7 +16,7 @@ export default function LessonPage() {
   const [completed, setCompleted] = useState(
     JSON.parse(localStorage.getItem("completedLessons")) || []
   );
-  const [lessons, setLessons] = useState(staticLessons);
+  const [lessons, setLessons] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [lesson, setLesson] = useState(null);
@@ -48,11 +47,11 @@ export default function LessonPage() {
           });
           setLessons(normalized);
         } else {
-          setLessons(staticLessons);
+          setLessons([]);
         }
       } catch (e) {
         setError(e);
-        setLessons(staticLessons);
+        setLessons([]);
       } finally {
         if (active) setLoading(false);
       }

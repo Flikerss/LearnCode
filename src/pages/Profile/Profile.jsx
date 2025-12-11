@@ -1,22 +1,63 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Profile.css";
-import { lessonsData as staticLessons } from "../../data/lessonsData";
 import ProgressBar from "./Progressbar/Progressbar";
 import ProfileCard from "./ProfileCard/ProfileCard";
 import Achievements from "./Achievements/Achievements";
 import { AuthContext } from "../../context/AuthContext";
 import ProfileSkeleton from "./ProfileSkeleton";
+import { fetchLessons } from "../../api/lessons";
 
 export default function Profile() {
-  const [lessonsData] = useState(staticLessons);
   const [completedLessons, setCompletedLessons] = useState([]);
+  const [lessonsData, setLessonsData] = useState([]);
+  const [lessonsLoading, setLessonsLoading] = useState(true);
   const { user, isAuthLoading, logout } = useContext(AuthContext) || {};
   const navigate = useNavigate();
 
   useEffect(() => {
     const completedRaw = localStorage.getItem("completedLessons");
     if (completedRaw) setCompletedLessons(JSON.parse(completedRaw));
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+
+    (async () => {
+      try {
+        setLessonsLoading(true);
+        const data = await fetchLessons();
+        if (!active) return;
+        const raw = Array.isArray(data?.lessons)
+          ? data.lessons
+          : Array.isArray(data)
+          ? data
+          : [];
+
+        const normalized = raw.map((lesson) => {
+          const chapterTitle =
+            typeof lesson.chapter === "object" && lesson.chapter !== null
+              ? lesson.chapter.title
+              : lesson.chapter || lesson.chapterTitle || "";
+
+          return {
+            id: lesson._id?.toString?.() || lesson.id,
+            chapter: chapterTitle || "Без главы",
+          };
+        });
+
+        setLessonsData(normalized);
+      } catch (error) {
+        console.error("Не удалось загрузить уроки для профиля", error);
+        if (active) setLessonsData([]);
+      } finally {
+        if (active) setLessonsLoading(false);
+      }
+    })();
+
+    return () => {
+      active = false;
+    };
   }, []);
 
   if (isAuthLoading) {
@@ -47,10 +88,16 @@ export default function Profile() {
         <Achievements />
         <div className="profile-progress-area">
           <h3>Прогресс обучения</h3>
-          <ProgressBar
-            lessonsData={lessonsData}
-            completedLessons={completedLessons}
-          />
+          {lessonsLoading ? (
+            <p>Загружаем список уроков…</p>
+          ) : lessonsData.length ? (
+            <ProgressBar
+              lessonsData={lessonsData}
+              completedLessons={completedLessons}
+            />
+          ) : (
+            <p>Не удалось получить список уроков.</p>
+          )}
         </div>
       </div>
     </div>

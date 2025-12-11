@@ -1,21 +1,51 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { lessonsData } from "../../data/lessonsData";
 import "./Catalog.css";
 
+const resolveChapterTitle = (lesson) => {
+  if (!lesson) return "Без главы";
+
+  if (lesson.chapter && typeof lesson.chapter === "object") {
+    return lesson.chapter.title || lesson.chapterTitle || "Без главы";
+  }
+
+  if (typeof lesson.chapter === "string" && lesson.chapter.trim()) {
+    return lesson.chapter.trim();
+  }
+
+  if (typeof lesson.chapterTitle === "string" && lesson.chapterTitle.trim()) {
+    return lesson.chapterTitle.trim();
+  }
+
+  return "Без главы";
+};
+
 export default function Catalog({
+  lessons,
   completedLessons,
   nextLesson,
   handleLessonClick,
 }) {
   const navigate = useNavigate();
 
-  const chapters = Array.from(new Set(lessonsData.map((l) => l.chapter))).map(
-    (chapter) => ({
-      title: chapter,
-      lessons: lessonsData.filter((l) => l.chapter === chapter),
-    })
-  );
+  const chapters = useMemo(() => {
+    if (!Array.isArray(lessons) || lessons.length === 0) return [];
+
+    const chaptersMap = new Map();
+
+    lessons.forEach((lesson) => {
+      const chapterTitle = resolveChapterTitle(lesson);
+      if (!chaptersMap.has(chapterTitle)) {
+        chaptersMap.set(chapterTitle, []);
+      }
+      chaptersMap.get(chapterTitle).push(lesson);
+    });
+
+    return Array.from(chaptersMap.entries()).map(([title, lessons]) => ({
+      title,
+      lessons,
+    }));
+  }, [lessons]);
 
   const initialProgress = (() => {
     try {

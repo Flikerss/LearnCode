@@ -3,14 +3,13 @@ import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import Catalog from "../../components/Catalog/Catalog";
 import NextLessonHint from "./NextLessonHint/NextLessonHint";
-import { lessonsData as staticLessons } from "../../data/lessonsData";
 import CatalogSkeleton from "../../components/Catalog/CatalogSkeleton";
 import { useLoadingDelay } from "../../components/Skeleton/useLoadingDelay";
 import { fetchLessons } from "../../api/lessons";
 import "./Lessons.css";
 
 export default function Lessons() {
-  const [lessons, setLessons] = useState(staticLessons);
+  const [lessons, setLessons] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [completed, setCompleted] = useState(() => {
@@ -23,34 +22,45 @@ export default function Lessons() {
 
   useEffect(() => {
     let active = true;
+
     (async () => {
       try {
         setLoading(true);
         setError(null);
         const data = await fetchLessons();
         if (!active) return;
-        // Expecting an array; fallback to static if not
-        if (Array.isArray(data) && data.length) {
-          // Normalize to the fields used by UI if necessary
-          const normalized = data.map((l) => ({
-            id: l._id?.toString?.() || l.id,
-            title: l.title,
-            chapter: l.chapterTitle || l.chapter || "",
-            theory: l.theory?.[0]?.body || l.theory || "",
-            practice: l.practiceTask?.description || l.practice || "",
-            duration: l.duration ? `${l.duration} мин` : l.duration || "",
-          }));
+
+        const raw = Array.isArray(data?.lessons)
+          ? data.lessons
+          : Array.isArray(data)
+          ? data
+          : [];
+
+        if (raw.length) {
+          const normalized = raw.map((l) => {
+            const chapterTitle =
+              typeof l.chapter === "object" && l.chapter !== null
+                ? l.chapter.title
+                : l.chapter || l.chapterTitle || "";
+
+            return {
+              ...l,
+              id: l._id?.toString?.() || l.id,
+              chapter: chapterTitle || "Без главы",
+            };
+          });
           setLessons(normalized);
         } else {
-          setLessons(staticLessons);
+          setLessons([]);
         }
       } catch (e) {
         setError(e);
-        setLessons(staticLessons);
+        setLessons([]);
       } finally {
         if (active) setLoading(false);
       }
     })();
+
     return () => {
       active = false;
     };
@@ -101,6 +111,7 @@ export default function Lessons() {
           <>
             <NextLessonHint lastLesson={lastLesson} nextLesson={nextLesson} />
             <Catalog
+              lessons={lessons}
               completedLessons={completed}
               nextLesson={nextLesson}
               handleLessonClick={handleLessonClick}

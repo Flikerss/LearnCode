@@ -6,6 +6,9 @@ export default function ProgressBar({ completedLessons, lessonsData }) {
   const [open, setOpen] = useState(false);
 
   const chapters = useMemo(() => {
+    if (!Array.isArray(lessonsData) || lessonsData.length === 0) {
+      return [];
+    }
     const map = {};
     lessonsData.forEach((l) => {
       if (!map[l.chapter]) map[l.chapter] = [];
@@ -81,7 +84,21 @@ export default function ProgressBar({ completedLessons, lessonsData }) {
   }, [completedLessons, chapters]);
 
   const overallPercent = useMemo(() => {
-    return Math.round((completedLessons.length / lessonsData.length) * 100);
+    if (!Array.isArray(lessonsData) || lessonsData.length === 0) {
+      return 0;
+    }
+
+    const lessonIds = new Set(lessonsData.map((lesson) => lesson.id));
+    let completedCount = 0;
+
+    completedLessons.forEach((id) => {
+      if (lessonIds.has(id)) {
+        completedCount += 1;
+      }
+    });
+
+    const percent = Math.round((completedCount / lessonsData.length) * 100);
+    return Math.min(100, Math.max(0, percent));
   }, [lessonsData, completedLessons]);
 
   return (
@@ -92,7 +109,8 @@ export default function ProgressBar({ completedLessons, lessonsData }) {
             <div className="fill" style={{ width: `${overallPercent}%` }} />
           </div>
           <span className="lessons-count">
-            {completedLessons.length} из {lessonsData.length} уроков
+            {Math.min(completedLessons.length, lessonsData.length)} из{" "}
+            {lessonsData.length} уроков
           </span>
         </div>
 

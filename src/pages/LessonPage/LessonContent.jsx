@@ -23,7 +23,7 @@ export default function LessonContent({ lesson, isLoading }) {
     <div className="lesson-content">
       <h2>{lesson.title}</h2>
       <div className="lesson-block">
-        <h3>📖 Теория</h3>
+        <h3>Теория</h3>
         {lesson.theory && lesson.theory.length ? (
           <div className="lesson-theory">
             {lesson.theory.map((paragraph, idx) => (
@@ -35,7 +35,7 @@ export default function LessonContent({ lesson, isLoading }) {
         )}
       </div>
       <div className="lesson-block">
-        <h3>💻 Практика</h3>
+        <h3>Практика</h3>
         {lesson.practice ? (
           <p>{lesson.practice}</p>
         ) : (
