@@ -1,41 +1,37 @@
 import React from "react";
-import {
-  SkeletonCircle,
-  SkeletonRect,
-  SkeletonText,
-} from "../../components/Skeleton/Skeleton";
+import { Skeleton } from "@mui/material";
 import "./Profile.css";
 
 export default function ProfileSkeleton() {
   return (
-    <div className="profile-wrapper skeleton-scope" aria-hidden>
+    <div className="profile-wrapper" aria-hidden>
       <div className="profile-header">
-        <SkeletonRect width={140} height={36} />
+        <Skeleton variant="rectangular" width={140} height={36} />
       </div>
       <div className="profile-main">
         <div className="profile-user-card">
           <div className="profile-avatar">
-            <SkeletonCircle size={96} />
+            <Skeleton variant="circular" width={96} height={96} />
           </div>
           <h2 className="profile-name">
-            <SkeletonText width="50%" />
+            <Skeleton variant="text" width="50%" />
           </h2>
           <p className="profile-email">
-            <SkeletonText width="60%" />
+            <Skeleton variant="text" width="60%" />
           </p>
           <p className="profile-date">
-            <SkeletonText width="40%" />
+            <Skeleton variant="text" width="40%" />
           </p>
           <div
             className="currency-box"
             style={{ display: "flex", gap: 8, alignItems: "center" }}
           >
-            <SkeletonRect width={24} height={24} />
-            <SkeletonText width={60} />
-            <SkeletonRect width={20} height={20} />
+            <Skeleton variant="rectangular" width={24} height={24} />
+            <Skeleton variant="text" width={60} />
+            <Skeleton variant="rectangular" width={20} height={20} />
           </div>
-          <SkeletonRect width={180} height={36} />
-          <SkeletonRect width={140} height={36} />
+          <Skeleton variant="rectangular" width={180} height={36} />
+          <Skeleton variant="rectangular" width={140} height={36} />
         </div>
 
         <div className="profile-achievements">
@@ -46,15 +42,15 @@ export default function ProfileSkeleton() {
             {Array.from({ length: 4 }).map((_, i) => (
               <div className="achievement-card" key={i}>
                 <div className="achievement-image">
-                  <SkeletonRect width={64} height={64} />
+                  <Skeleton variant="rectangular" width={64} height={64} />
                 </div>
                 <div className="achievement-text">
-                  <SkeletonText width="70%" />
+                  <Skeleton variant="text" width="70%" />
                 </div>
               </div>
             ))}
           </div>
-          <SkeletonRect width={220} height={36} />
+          <Skeleton variant="rectangular" width={220} height={36} />
         </div>
 
         <div className="profile-progress-area">
@@ -68,8 +64,8 @@ export default function ProfileSkeleton() {
             <div className="bar" style={{ width: "100%" }}>
               <div className="fill" style={{ width: 0 }} />
             </div>
-            <SkeletonText width={40} />
-            <SkeletonRect width={110} height={32} />
+            <Skeleton variant="text" width={40} />
+            <Skeleton variant="rectangular" width={110} height={32} />
           </div>
         </div>
       </div>

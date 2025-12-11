@@ -4,7 +4,6 @@ import Footer from "../../components/Footer";
 import Catalog from "../../components/Catalog/Catalog";
 import NextLessonHint from "./NextLessonHint/NextLessonHint";
 import CatalogSkeleton from "../../components/Catalog/CatalogSkeleton";
-import { useLoadingDelay } from "../../components/Skeleton/useLoadingDelay";
 import { fetchLessons } from "../../api/lessons";
 import "./Lessons.css";
 
@@ -98,7 +97,7 @@ export default function Lessons() {
     ? lessons.find((l) => l.id === lastLessonId)
     : null;
 
-  const showSkeleton = useLoadingDelay(loading, 200, 350, true);
+  const showSkeleton = loading;
 
   return (
     <>

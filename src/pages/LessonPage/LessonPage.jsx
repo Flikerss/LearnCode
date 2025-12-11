@@ -5,7 +5,7 @@ import Footer from "../../components/Footer";
 import Sidebar from "./Sidebar";
 import LessonContent from "./LessonContent";
 import LessonPageSkeleton from "./LessonPageSkeleton";
-import { useLoadingDelay } from "../../components/Skeleton/useLoadingDelay";
+import { Skeleton } from "@mui/material";
 import { fetchLessons, fetchLessonById } from "../../api/lessons";
 import LessonCompiler from "./LessonCompiler";
 import "./LessonPage.css";
@@ -121,12 +121,7 @@ export default function LessonPage() {
       ? lessons[currentIndex + 1]
       : null;
 
-  const showSkeleton = useLoadingDelay(
-    loading || lessonLoading,
-    200,
-    350,
-    true
-  );
+  const showSkeleton = loading || lessonLoading;
 
   return (
     <>

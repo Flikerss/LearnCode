@@ -1,18 +1,19 @@
 import React from "react";
-import {
-  SkeletonCircle,
-  SkeletonRect,
-  SkeletonText,
-} from "../../components/Skeleton/Skeleton";
+import { Skeleton } from "@mui/material";
 
 export default function AboutSkeleton() {
   return (
-    <div className="skeleton-scope" aria-hidden>
+    <div aria-hidden>
       <section className="about">
         <div className="container">
-          <SkeletonText width="30%" />
+          <Skeleton variant="text" width="30%" />
           {Array.from({ length: 2 }).map((_, i) => (
-            <SkeletonRect key={i} height={14} width={`${90 - i * 10}%`} />
+            <Skeleton
+              key={i}
+              variant="rectangular"
+              height={14}
+              width={`${90 - i * 10}%`}
+            />
           ))}
         </div>
 
@@ -35,9 +36,9 @@ export default function AboutSkeleton() {
                 gap: 8,
               }}
             >
-              <SkeletonCircle size={80} />
-              <SkeletonText width="60%" />
-              <SkeletonText width="50%" />
+              <Skeleton variant="circular" width={80} height={80} />
+              <Skeleton variant="text" width="60%" />
+              <Skeleton variant="text" width="50%" />
             </div>
           ))}
         </div>
@@ -53,17 +54,21 @@ export default function AboutSkeleton() {
         >
           {Array.from({ length: 4 }).map((_, i) => (
             <div key={i} className="stat-card" style={{ padding: 12 }}>
-              <SkeletonText width="40%" />
-              <SkeletonText width="30%" />
+              <Skeleton variant="text" width="40%" />
+              <Skeleton variant="text" width="30%" />
             </div>
           ))}
         </div>
 
         <div className="faq" style={{ marginTop: 24 }}>
-          <SkeletonText width="25%" />
+          <Skeleton variant="text" width="25%" />
           {Array.from({ length: 3 }).map((_, i) => (
             <div key={i} style={{ marginTop: 8 }}>
-              <SkeletonRect height={16} width={`${95 - i * 8}%`} />
+              <Skeleton
+                variant="rectangular"
+                height={16}
+                width={`${95 - i * 8}%`}
+              />
             </div>
           ))}
         </div>

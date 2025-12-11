@@ -1,13 +1,13 @@
 import React from "react";
-import { SkeletonRect, SkeletonText } from "../../components/Skeleton/Skeleton";
+import { Skeleton } from "@mui/material";
 
 export default function HomeSkeleton() {
   return (
-    <section className="home skeleton-scope" aria-hidden>
+    <section className="home" aria-hidden>
       <div className="container">
-        <SkeletonText width="35%" />
-        <SkeletonRect height={14} width="80%" />
-        <SkeletonRect height={14} width="70%" />
+        <Skeleton variant="text" width="35%" />
+        <Skeleton variant="rectangular" height={14} width="80%" />
+        <Skeleton variant="rectangular" height={14} width="70%" />
 
         <div
           style={{
@@ -19,9 +19,9 @@ export default function HomeSkeleton() {
         >
           {Array.from({ length: 3 }).map((_, i) => (
             <div key={i} className="card" style={{ padding: 16 }}>
-              <SkeletonText width="60%" />
-              <SkeletonRect height={12} width="90%" />
-              <SkeletonRect height={12} width="85%" />
+              <Skeleton variant="text" width="60%" />
+              <Skeleton variant="rectangular" height={12} width="90%" />
+              <Skeleton variant="rectangular" height={12} width="85%" />
             </div>
           ))}
         </div>

@@ -1,19 +1,19 @@
 import React from "react";
-import { SkeletonRect, SkeletonText } from "../../components/Skeleton/Skeleton";
+import { Skeleton } from "@mui/material";
 
 export default function SignUpSkeleton() {
   return (
-    <section className="auth-page skeleton-scope" aria-hidden>
+    <section className="auth-page" aria-hidden>
       <div className="auth-container">
-        <SkeletonText width="30%" />
+        <Skeleton variant="text" width="30%" />
         <div style={{ display: "grid", gap: 12, marginTop: 12 }}>
-          <SkeletonText width="20%" />
-          <SkeletonRect height={40} />
-          <SkeletonText width="20%" />
-          <SkeletonRect height={40} />
-          <SkeletonText width="20%" />
-          <SkeletonRect height={40} />
-          <SkeletonRect height={44} />
+          <Skeleton variant="text" width="20%" />
+          <Skeleton variant="rectangular" height={40} />
+          <Skeleton variant="text" width="20%" />
+          <Skeleton variant="rectangular" height={40} />
+          <Skeleton variant="text" width="20%" />
+          <Skeleton variant="rectangular" height={40} />
+          <Skeleton variant="rectangular" height={44} />
         </div>
       </div>
     </section>
