@@ -5,14 +5,16 @@ import ProgressBar from "./Progressbar/Progressbar";
 import ProfileCard from "./ProfileCard/ProfileCard";
 import Achievements from "./Achievements/Achievements";
 import { AuthContext } from "../../context/AuthContext";
-import ProfileSkeleton from "./ProfileSkeleton";
 import { fetchLessons } from "../../api/lessons";
+import ProfileEditModal from "./ProfileEditModal.jsx";
 
 export default function Profile() {
   const [completedLessons, setCompletedLessons] = useState([]);
   const [lessonsData, setLessonsData] = useState([]);
   const [lessonsLoading, setLessonsLoading] = useState(true);
-  const { user, isAuthLoading, logout } = useContext(AuthContext) || {};
+  const { user, isAuthLoading, logout, refreshUser } =
+    useContext(AuthContext) || {};
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -61,7 +63,11 @@ export default function Profile() {
   }, []);
 
   if (isAuthLoading) {
-    return <ProfileSkeleton />;
+    return (
+      <div className="profile-wrapper" role="status">
+        <p>Загружаем профиль…</p>
+      </div>
+    );
   }
 
   if (!user) {
@@ -76,6 +82,9 @@ export default function Profile() {
     navigate("/");
   };
 
+  const handleOpenEditModal = () => setIsEditModalOpen(true);
+  const handleCloseEditModal = () => setIsEditModalOpen(false);
+
   return (
     <div className="profile-wrapper">
       <div className="profile-header">
@@ -84,7 +93,11 @@ export default function Profile() {
         </button>
       </div>
       <div className="profile-main">
-        <ProfileCard user={user} onLogout={logout} />
+        <ProfileCard
+          user={user}
+          onLogout={logout}
+          onEditProfile={handleOpenEditModal}
+        />
         <Achievements />
         <div className="profile-progress-area">
           <h3>Прогресс обучения</h3>
@@ -100,6 +113,12 @@ export default function Profile() {
           )}
         </div>
       </div>
+      <ProfileEditModal
+        isOpen={isEditModalOpen}
+        onClose={handleCloseEditModal}
+        user={user}
+        onProfileUpdated={refreshUser}
+      />
     </div>
   );
 }

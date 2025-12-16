@@ -4,10 +4,9 @@ import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import Sidebar from "./Sidebar";
 import LessonContent from "./LessonContent";
-import LessonPageSkeleton from "./LessonPageSkeleton";
-import { Skeleton } from "@mui/material";
 import { fetchLessons, fetchLessonById } from "../../api/lessons";
 import LessonCompiler from "./LessonCompiler";
+import { LessonPageSkeleton } from "../../components/Skeletons";
 import "./LessonPage.css";
 
 export default function LessonPage() {
@@ -127,7 +126,7 @@ export default function LessonPage() {
     <>
       <Navbar />
       {showSkeleton ? (
-        <LessonPageSkeleton />
+        <LessonPageSkeleton variant="inline" />
       ) : (
         <main className="lesson-page" aria-busy={showSkeleton || undefined}>
           <Sidebar currentLesson={lessonId} lessons={lessons} />

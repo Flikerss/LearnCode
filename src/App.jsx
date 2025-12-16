@@ -3,7 +3,15 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import { ErrorBoundary } from "./components/ErrorBoundary.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
-import RouteFallback from "./components/Skeleton/RouteFallback.jsx";
+import {
+  HomeSkeleton,
+  AboutSkeleton,
+  LessonsSkeleton,
+  LessonPageSkeleton,
+  ProfileSkeleton,
+  AuthFormSkeleton,
+  AdminPanelSkeleton,
+} from "./components/Skeletons";
 
 const Home = lazy(() => import("./pages/Home/Home"));
 const About = lazy(() => import("./pages/About/About"));
@@ -12,8 +20,9 @@ const SignUp = lazy(() => import("./pages/SignUp/SignUp"));
 const Lessons = lazy(() => import("./pages/Lessons/Lessons"));
 const LessonPage = lazy(() => import("./pages/LessonPage/LessonPage"));
 const Profile = lazy(() => import("./pages/Profile/Profile"));
+const AdminPanel = lazy(() => import("./pages/Adminpanel/Adminpanel"));
 
-// Unified route fallback to avoid duplicate loaders. Page-level skeletons handle data loading.
+// Suspense fallbacks share the same skeletons as data loading states.
 
 function AppContent() {
   const location = useLocation();
@@ -27,7 +36,7 @@ function AppContent() {
         <Route
           path="/"
           element={
-            <Suspense fallback={<RouteFallback />}>
+            <Suspense fallback={<HomeSkeleton />}>
               <Home />
             </Suspense>
           }
@@ -35,7 +44,7 @@ function AppContent() {
         <Route
           path="/about"
           element={
-            <Suspense fallback={<RouteFallback />}>
+            <Suspense fallback={<AboutSkeleton />}>
               <About />
             </Suspense>
           }
@@ -43,7 +52,7 @@ function AppContent() {
         <Route
           path="/login"
           element={
-            <Suspense fallback={<RouteFallback />}>
+            <Suspense fallback={<AuthFormSkeleton fields={2} />}>
               <SignIn />
             </Suspense>
           }
@@ -51,7 +60,7 @@ function AppContent() {
         <Route
           path="/register"
           element={
-            <Suspense fallback={<RouteFallback />}>
+            <Suspense fallback={<AuthFormSkeleton fields={3} />}>
               <SignUp />
             </Suspense>
           }
@@ -59,7 +68,7 @@ function AppContent() {
         <Route
           path="/lessons"
           element={
-            <Suspense fallback={<RouteFallback />}>
+            <Suspense fallback={<LessonsSkeleton />}>
               <Lessons />
             </Suspense>
           }
@@ -67,7 +76,7 @@ function AppContent() {
         <Route
           path="/lessons/:lessonId"
           element={
-            <Suspense fallback={<RouteFallback />}>
+            <Suspense fallback={<LessonPageSkeleton />}>
               <LessonPage />
             </Suspense>
           }
@@ -76,8 +85,18 @@ function AppContent() {
           path="/profile"
           element={
             <ProtectedRoute>
-              <Suspense fallback={<RouteFallback />}>
+              <Suspense fallback={<ProfileSkeleton />}>
                 <Profile />
+              </Suspense>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute requiredRole="admin" forbiddenRedirect="/">
+              <Suspense fallback={<AdminPanelSkeleton />}>
+                <AdminPanel />
               </Suspense>
             </ProtectedRoute>
           }

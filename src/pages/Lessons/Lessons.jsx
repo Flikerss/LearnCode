@@ -3,7 +3,7 @@ import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import Catalog from "../../components/Catalog/Catalog";
 import NextLessonHint from "./NextLessonHint/NextLessonHint";
-import CatalogSkeleton from "../../components/Catalog/CatalogSkeleton";
+import { LessonsSkeleton } from "../../components/Skeletons";
 import { fetchLessons } from "../../api/lessons";
 import "./Lessons.css";
 
@@ -105,7 +105,7 @@ export default function Lessons() {
       <main className="lessons-page" aria-busy={showSkeleton || undefined}>
         <h1 className="page-title">Каталог уроков</h1>
         {showSkeleton ? (
-          <CatalogSkeleton />
+          <LessonsSkeleton variant="inline" />
         ) : (
           <>
             <NextLessonHint lastLesson={lastLesson} nextLesson={nextLesson} />

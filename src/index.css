@@ -1,3 +1,10 @@
+:root {
+  --font-base: "Manrope", "Inter", "Segoe UI", sans-serif;
+  --font-display: "Space Grotesk", "Manrope", sans-serif;
+  --color-bg: #f6f8fb;
+  --color-text: #1f2a37;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -5,7 +12,21 @@
 }
 
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
-  color: #333;
+  font-family: var(--font-base);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.6;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4,
+.heading-display {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--color-text);
 }

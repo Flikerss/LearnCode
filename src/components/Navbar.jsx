@@ -3,6 +3,21 @@ import { Link, useNavigate } from "react-router-dom";
 import "./Navbar.css";
 import { AuthContext } from "../context/AuthContext";
 
+const DEFAULT_AVATAR_COLOR = "#ff8c00";
+
+function resolveAvatar(avatar) {
+  if (typeof avatar === "string" && avatar.startsWith("color:")) {
+    const [, colorValue] = avatar.split("color:");
+    return { type: "color", value: colorValue || DEFAULT_AVATAR_COLOR };
+  }
+
+  if (avatar) {
+    return { type: "image", value: avatar };
+  }
+
+  return { type: "color", value: DEFAULT_AVATAR_COLOR };
+}
+
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const auth = useContext(AuthContext);
@@ -12,6 +27,9 @@ export default function Navbar() {
   const isGuest = !user;
   const userName = user ? user.name : "Гость";
   const userAvatar = user ? user.avatar : null;
+  const avatarMeta = resolveAvatar(userAvatar);
+  const avatarInitial = userName ? userName[0].toUpperCase() : "?";
+  const isAdmin = user?.role === "admin";
 
   const handleLogout = async () => {
     if (auth && typeof auth.logout === "function") {
@@ -43,6 +61,11 @@ export default function Navbar() {
           <li>
             <Link to="/lessons">Уроки</Link>
           </li>
+          {isAdmin && (
+            <li>
+              <Link to="/admin">Админ панель</Link>
+            </li>
+          )}
         </ul>
 
         <div className="navbar-right">
@@ -62,11 +85,18 @@ export default function Navbar() {
               onClick={() => setIsOpen(false)}
             >
               <div className="avatar-wrapper">
-                {userAvatar ? (
-                  <img src={userAvatar} alt={userName} className="avatar" />
+                {avatarMeta.type === "image" ? (
+                  <img
+                    src={avatarMeta.value}
+                    alt={userName}
+                    className="avatar"
+                  />
                 ) : (
-                  <div className="avatar-placeholder">
-                    {userName ? userName[0].toUpperCase() : "?"}
+                  <div
+                    className="avatar-placeholder"
+                    style={{ backgroundColor: avatarMeta.value }}
+                  >
+                    {avatarInitial}
                   </div>
                 )}
               </div>
@@ -102,6 +132,13 @@ export default function Navbar() {
               Уроки
             </Link>
           </li>
+          {isAdmin && (
+            <li>
+              <Link to="/admin" onClick={() => setIsOpen(false)}>
+                Админ панель
+              </Link>
+            </li>
+          )}
 
           {!isGuest && (
             <li>

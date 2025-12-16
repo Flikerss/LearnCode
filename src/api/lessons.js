@@ -7,3 +7,26 @@ export async function fetchLessons(options = {}) {
 export async function fetchLessonById(id, options = {}) {
   return apiRequest(`/lessons/${id}`, { method: "GET", ...options });
 }
+
+export async function createLesson(payload, options = {}) {
+  return apiRequest("/lessons", {
+    method: "POST",
+    body: payload,
+    ...options,
+  });
+}
+
+export async function updateLesson(id, payload, options = {}) {
+  return apiRequest(`/lessons/${id}`, {
+    method: "PUT",
+    body: payload,
+    ...options,
+  });
+}
+
+export async function deleteLesson(id, options = {}) {
+  return apiRequest(`/lessons/${id}`, {
+    method: "DELETE",
+    ...options,
+  });
+}

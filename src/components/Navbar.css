@@ -265,6 +265,49 @@
   }
 }
 
+@media (max-width: 480px) {
+  .navbar {
+    height: 56px;
+    padding: 0 8px;
+  }
+
+  .navbar-container {
+    padding: 0 12px;
+    gap: 12px;
+  }
+
+  .logo-text {
+    font-size: 1.1rem;
+  }
+
+  .navbar-right {
+    gap: 12px;
+  }
+
+  .hamburger span {
+    width: 22px;
+  }
+
+  .mobile-menu {
+    top: 56px;
+  }
+
+  .mobile-links {
+    padding: 16px;
+  }
+
+  .mobile-links li a,
+  .mobile-link-btn {
+    font-size: 1.05rem;
+    padding: 12px 0;
+  }
+
+  .mobile-actions,
+  .mobile-user {
+    padding: 0 16px 16px;
+  }
+}
+
 .mobile-user {
   padding: 0 20px 20px;
 }
