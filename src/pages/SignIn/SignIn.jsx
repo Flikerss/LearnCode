@@ -24,7 +24,6 @@ export default function SignIn() {
       await auth.login({ email, password });
       navigate("/", { replace: true });
     } catch (err) {
-      // toast уже показан внутри AuthContext.login
     } finally {
       setLoading(false);
     }

@@ -30,3 +30,10 @@ export async function deleteLesson(id, options = {}) {
     ...options,
   });
 }
+
+export async function markLessonCompleted(lessonId, options = {}) {
+  return apiRequest(`/lessons/${lessonId}/completion`, {
+    method: "POST",
+    ...options,
+  });
+}

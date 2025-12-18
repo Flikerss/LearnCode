@@ -29,10 +29,10 @@ export default function Lessons() {
         const data = await fetchLessons();
         if (!active) return;
 
-        const raw = Array.isArray(data?.lessons)
-          ? data.lessons
-          : Array.isArray(data)
+        const raw = Array.isArray(data)
           ? data
+          : Array.isArray(data?.lessons)
+          ? data.lessons
           : [];
 
         if (raw.length) {
@@ -49,6 +49,15 @@ export default function Lessons() {
             };
           });
           setLessons(normalized);
+
+          const apiCompleted = normalized
+            .filter((l) => l.isCompleted)
+            .map((l) => l.id);
+          
+          if (apiCompleted.length > 0) {
+            setCompleted(apiCompleted);
+            localStorage.setItem("completedLessons", JSON.stringify(apiCompleted));
+          }
         } else {
           setLessons([]);
         }

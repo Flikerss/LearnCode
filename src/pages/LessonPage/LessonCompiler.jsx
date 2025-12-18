@@ -44,15 +44,29 @@ export default function LessonCompiler({ lesson, lessonId }) {
         languageId,
       };
       const data = await createSubmission(payload);
+      
+      // Обрабатываем ответ от сервера
+      const success = data?.success === true;
+      const status = success ? "accepted" : "rejected";
+      const testResults = data?.submission?.testResults || data?.executionDetails || [];
+      const error = data?.submission?.error || data?.error || (success ? null : "Решение неверно");
+      
       setResult({
-        status: data?.submission?.status,
-        testResults:
-          data?.submission?.testResults || data?.executionDetails || [],
-        error: data?.submission?.error,
-        success: data?.success,
+        status,
+        testResults,
+        error,
+        success,
       });
     } catch (err) {
-      setError(err?.message || "Не удалось отправить решение");
+      // Обрабатываем ошибки от API
+      const errorMessage = err?.body?.error || err?.message || "Не удалось отправить решение";
+      setError(errorMessage);
+      setResult({
+        status: "error",
+        testResults: [],
+        error: errorMessage,
+        success: false,
+      });
     } finally {
       setIsRunning(false);
     }
@@ -111,7 +125,15 @@ export default function LessonCompiler({ lesson, lessonId }) {
           <strong>Результат:</strong>{" "}
           {status === "accepted" || status === "success"
             ? "✔ Решение принято"
-            : "✖ Ошибка"}
+            : status === "rejected" || status === "error"
+            ? "✖ Решение неверно"
+            : "⚠ Ожидание проверки"}
+        </div>
+      )}
+      
+      {result?.error && !error && (
+        <div className="compiler-error-message">
+          {result.error}
         </div>
       )}
 

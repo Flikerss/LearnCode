@@ -22,7 +22,6 @@ export default function SignUp() {
       await auth.register({ name, email, password });
       navigate("/profile", { replace: true });
     } catch (err) {
-      // toast уже показан внутри AuthContext.register
     } finally {
       setLoading(false);
     }

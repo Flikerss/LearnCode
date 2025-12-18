@@ -22,8 +22,6 @@ const LessonPage = lazy(() => import("./pages/LessonPage/LessonPage"));
 const Profile = lazy(() => import("./pages/Profile/Profile"));
 const AdminPanel = lazy(() => import("./pages/Adminpanel/Adminpanel"));
 
-// Suspense fallbacks share the same skeletons as data loading states.
-
 function AppContent() {
   const location = useLocation();
   const hideNavbarRoutes = ["/profile"];

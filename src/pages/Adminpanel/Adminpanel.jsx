@@ -50,7 +50,13 @@ function mapLessonToForm(lesson) {
 }
 
 function buildLessonPayload(formState) {
-  const theoryCandidate = formState.theory.trim();
+  // Вспомогательная функция для безопасного преобразования в строку и trim
+  const safeTrim = (value) => {
+    if (value == null) return "";
+    return String(value).trim();
+  };
+
+  const theoryCandidate = safeTrim(formState.theory);
   const theoryBlocks = theoryCandidate
     ? theoryCandidate
         .split(/\n{2,}/)
@@ -60,19 +66,20 @@ function buildLessonPayload(formState) {
 
   const sanitizedTestCases = formState.testCases
     .map((test) => ({
-      input: (test.input || "").trim(),
-      expectedOutput: (test.expectedOutput || "").trim(),
+      input: safeTrim(test.input),
+      expectedOutput: safeTrim(test.expectedOutput),
     }))
     .filter((test) => test.input || test.expectedOutput);
 
-  const chapterValue = formState.chapter.trim();
-  const durationValue = formState.duration.trim();
-  const interactiveUrlValue = formState.interactiveUrl.trim();
-  const expectedOutputValue = formState.expectedOutput.trim();
+  // Безопасное преобразование в строку перед trim()
+  const chapterValue = safeTrim(formState.chapter);
+  const durationValue = safeTrim(formState.duration);
+  const interactiveUrlValue = safeTrim(formState.interactiveUrl);
+  const expectedOutputValue = safeTrim(formState.expectedOutput);
   const language = Number.parseInt(formState.languageId, 10);
 
   const payload = {
-    title: formState.title.trim(),
+    title: safeTrim(formState.title),
     theory:
       theoryBlocks.length > 1
         ? theoryBlocks
@@ -80,7 +87,7 @@ function buildLessonPayload(formState) {
         ? theoryBlocks[0]
         : theoryCandidate,
     interactiveUrl: interactiveUrlValue || null,
-    practiceTask: formState.practiceTask.trim(),
+    practiceTask: safeTrim(formState.practiceTask),
     expectedOutput: expectedOutputValue || null,
     languageId: Number.isNaN(language) ? 63 : language,
     testCases: sanitizedTestCases,

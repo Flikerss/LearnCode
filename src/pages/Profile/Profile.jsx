@@ -30,10 +30,11 @@ export default function Profile() {
         setLessonsLoading(true);
         const data = await fetchLessons();
         if (!active) return;
-        const raw = Array.isArray(data?.lessons)
-          ? data.lessons
-          : Array.isArray(data)
+        
+        const raw = Array.isArray(data)
           ? data
+          : Array.isArray(data?.lessons)
+          ? data.lessons
           : [];
 
         const normalized = raw.map((lesson) => {

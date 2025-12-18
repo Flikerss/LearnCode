@@ -12,9 +12,6 @@ import "./LessonPage.css";
 export default function LessonPage() {
   const { lessonId } = useParams();
   const navigate = useNavigate();
-  const [completed, setCompleted] = useState(
-    JSON.parse(localStorage.getItem("completedLessons")) || []
-  );
   const [lessons, setLessons] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -29,16 +26,23 @@ export default function LessonPage() {
         setError(null);
         const data = await fetchLessons();
         if (!active) return;
-        if (Array.isArray(data) && data.length) {
-          const normalized = data.map((l) => {
+        const raw = Array.isArray(data)
+          ? data
+          : Array.isArray(data?.lessons)
+          ? data.lessons
+          : [];
+
+        if (raw.length) {
+          const normalized = raw.map((l) => {
             const chapterTitle =
               l.chapterTitle ||
-              (typeof l.chapter === "object" ? l.chapter?.title : l.chapter) ||
+              (typeof l.chapter === "object" && l.chapter !== null ? l.chapter?.title : l.chapter) ||
               "";
             return {
+              ...l,
               id: l._id?.toString?.() || l.id,
               title: l.title,
-              chapter: chapterTitle,
+              chapter: chapterTitle || "Без главы",
               theory: l.theory?.[0]?.body || l.theory || "",
               practice: l.practiceTask?.description || l.practice || "",
               duration: l.duration ? `${l.duration} мин` : l.duration || "",
@@ -61,14 +65,6 @@ export default function LessonPage() {
   }, []);
 
   useEffect(() => {
-    setCompleted((prev) => {
-      if (prev.includes(lessonId)) {
-        return prev;
-      }
-      const updated = [...prev, lessonId];
-      localStorage.setItem("completedLessons", JSON.stringify(updated));
-      return updated;
-    });
     localStorage.setItem("lastLessonId", lessonId);
   }, [lessonId]);
 
