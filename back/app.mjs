@@ -39,7 +39,6 @@ app.use(
 app.use(cookieParser());
 app.use(bodyParser.json());
 
-// Middleware для установки Content-Type для JSON ответов
 app.use((req, res, next) => {
   const originalJson = res.json;
   res.json = function (data) {
@@ -52,25 +51,25 @@ app.use((req, res, next) => {
 });
 
 import userRoutes from "./src/routes/user.mjs";
-app.use("/user", userRoutes);
+app.use("/api/user", userRoutes);
 
 import lessonsRoutesFactory from "./src/routes/lessons.mjs";
-app.use("/lessons", lessonsRoutesFactory(client, JUDGE0_URL, JUDGE0_API_KEY));
+app.use("/api/lessons", lessonsRoutesFactory(client, JUDGE0_URL, JUDGE0_API_KEY));
 
 import submissionsRoutesFactory from "./src/routes/submissions.mjs";
-app.use("/submissions", submissionsRoutesFactory(client, JUDGE0_URL, JUDGE0_API_KEY));
+app.use("/api/submissions", submissionsRoutesFactory(client, JUDGE0_URL, JUDGE0_API_KEY));
 
 import achievementsRoutesFactory from "./src/routes/achievements.mjs";
-app.use("/achievements", achievementsRoutesFactory(client));
+app.use("/api/achievements", achievementsRoutesFactory(client));
 
 import walletRoutesFactory from "./src/routes/wallet.mjs";
-app.use("/wallet", walletRoutesFactory(client));
+app.use("/api/wallet", walletRoutesFactory(client));
 
 import contentRoutesFactory from "./src/routes/content.mjs";
-app.use("/content", contentRoutesFactory(client));
+app.use("/api/content", contentRoutesFactory(client));
 
 import feedbackRoutesFactory from "./src/routes/feedback.mjs";
-app.use("/feedback", feedbackRoutesFactory(client));
+app.use("/api/feedback", feedbackRoutesFactory(client));
 
 app.use((err, req, res, next) => {
   console.error("Ошибка сервера:", err);

@@ -19,10 +19,21 @@ export default (client, JUDGE0_URL, JUDGE0_API_KEY) => {
         return res.status(404).json({ error: "Урок не найден" });
       }
 
+      // Получаем тестовые случаи из урока
+      const testCases = lesson.practiceTask?.testCases || [];
+      
+      // Если нет тестовых случаев, возвращаем ошибку
+      if (!Array.isArray(testCases) || testCases.length === 0) {
+        return res.status(400).json({ 
+          error: "Урок не содержит тестовых случаев для проверки решения. Обратитесь к администратору.",
+          success: false 
+        });
+      }
+
       const executionResult = await executeCode(
         code,
         languageId || lesson.practiceTask?.languageId || 63,
-        lesson.practiceTask?.testCases || [],
+        testCases,
         JUDGE0_URL,
         JUDGE0_API_KEY
       );
@@ -119,53 +130,98 @@ async function executeCode(code, languageId, testCases, JUDGE0_URL, JUDGE0_API_K
 async function executeWithJudge0(code, languageId, testCases, JUDGE0_URL, JUDGE0_API_KEY) {
   const axios = await import("axios");
   const startTime = Date.now();
+  
+  // Если нет тестовых случаев, код не должен приниматься
+  if (!Array.isArray(testCases) || testCases.length === 0) {
+    return {
+      success: false,
+      error: "Для проверки решения необходимы тестовые случаи. Обратитесь к администратору.",
+      details: [],
+      executionTime: Date.now() - startTime,
+    };
+  }
+
   try {
     const results = [];
     let allPassed = true;
 
     for (const testCase of testCases) {
-      const response = await axios.default.post(
-        `${JUDGE0_URL}/submissions?base64_encoded=false&wait=true`,
-        {
-          source_code: code,
-          language_id: languageId,
-          stdin: testCase.input || "",
-          expected_output: testCase.expectedOutput,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "X-RapidAPI-Key": JUDGE0_API_KEY,
-            "X-RapidAPI-Host": "judge0-ce.p.rapidapi.com",
+      // Проверяем, что тест-кейс валиден
+      if (!testCase.hasOwnProperty('expectedOutput')) {
+        results.push({
+          input: testCase.input || null,
+          expectedOutput: null,
+          actualOutput: null,
+          passed: false,
+          status: "Invalid test case",
+          error: "Тестовый случай не содержит ожидаемого результата",
+        });
+        allPassed = false;
+        continue;
+      }
+
+      try {
+        const response = await axios.default.post(
+          `${JUDGE0_URL}/submissions?base64_encoded=false&wait=true`,
+          {
+            source_code: code,
+            language_id: languageId,
+            stdin: testCase.input || "",
+            expected_output: testCase.expectedOutput,
           },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "X-RapidAPI-Key": JUDGE0_API_KEY,
+              "X-RapidAPI-Host": "judge0-ce.p.rapidapi.com",
+            },
+            timeout: 10000, // 10 секунд таймаут
+          }
+        );
+        const result = response.data;
+        
+        // Статус 3 = Accepted, статус 4 = Wrong Answer
+        const passed = result.status.id === 3;
+        const actualOutput = result.stdout || result.stderr || "";
+        
+        results.push({
+          input: testCase.input ?? "—",
+          expectedOutput: testCase.expectedOutput ?? "—",
+          actualOutput: actualOutput.trim() || "—",
+          passed: passed,
+          status: result.status.description || "Unknown",
+          time: result.time,
+          memory: result.memory,
+          error: result.stderr || (result.status.id !== 3 ? result.status.description : null),
+        });
+        
+        if (!passed) {
+          allPassed = false;
         }
-      );
-      const result = response.data;
-      const passed = result.status.id === 3;
-      results.push({
-        input: testCase.input,
-        expectedOutput: testCase.expectedOutput,
-        actualOutput: result.stdout,
-        passed: passed,
-        status: result.status.description,
-        time: result.time,
-        memory: result.memory,
-      });
-      if (!passed) {
+      } catch (apiError) {
+        results.push({
+          input: testCase.input ?? "—",
+          expectedOutput: testCase.expectedOutput ?? "—",
+          actualOutput: null,
+          passed: false,
+          status: "Error",
+          error: apiError.response?.data?.error || apiError.message || "Ошибка выполнения кода",
+        });
         allPassed = false;
       }
     }
+    
     return {
-      success: allPassed,
-      error: allPassed ? null : "Некоторые тесты не прошли",
+      success: allPassed && results.length > 0,
+      error: allPassed ? null : "Некоторые тесты не прошли. Проверьте решение.",
       details: results,
       executionTime: Date.now() - startTime,
     };
   } catch (error) {
     return {
       success: false,
-      error: error.message,
-      details: null,
+      error: error.message || "Ошибка выполнения кода",
+      details: [],
       executionTime: Date.now() - startTime,
     };
   }
@@ -178,46 +234,118 @@ async function executeJavaScriptLocally(code, testCases) {
   const results = [];
   let allPassed = true;
 
+  // Если нет тестовых случаев, код не должен приниматься
+  if (!Array.isArray(testCases) || testCases.length === 0) {
+    return {
+      success: false,
+      error: "Для проверки решения необходимы тестовые случаи. Обратитесь к администратору.",
+      details: [],
+      executionTime: Date.now() - startTime,
+    };
+  }
+
   try {
     for (const testCase of testCases) {
+      // Проверяем, что тест-кейс имеет необходимые поля
+      if (!testCase.hasOwnProperty('expectedOutput')) {
+        results.push({
+          input: testCase.input || null,
+          expectedOutput: null,
+          actualOutput: null,
+          passed: false,
+          error: "Тестовый случай не содержит ожидаемого результата",
+        });
+        allPassed = false;
+        continue;
+      }
+
       const sandbox = {
         input: testCase.input,
         result: null,
+        output: null,
         console: {
           log: (...args) => {
             sandbox.result = args.join(" ");
+            sandbox.output = args.join(" ");
           },
         },
       };
 
-      const context = vm.createContext(sandbox);
-      vm.runInContext(code, context, { timeout: 5000 });
+      try {
+        const context = vm.createContext(sandbox);
+        vm.runInContext(code, context, { timeout: 5000 });
 
-      const passed =
-        sandbox.result?.toString().trim() === testCase.expectedOutput?.toString().trim();
+        // Проверяем результат через console.log или через return (если есть функция solution)
+        let actualOutput = sandbox.result || sandbox.output;
+        
+        // Если код содержит функцию solution, пытаемся её вызвать
+        if (code.includes('function solution') || code.includes('const solution') || code.includes('let solution')) {
+          try {
+            const solutionSandbox = {
+              input: testCase.input,
+              result: null,
+              console: {
+                log: (...args) => {
+                  solutionSandbox.result = args.join(" ");
+                },
+              },
+            };
+            const solutionContext = vm.createContext(solutionSandbox);
+            // Выполняем код и затем вызываем solution если она есть
+            vm.runInContext(code, solutionContext, { timeout: 5000 });
+            
+            // Пытаемся вызвать solution(testCase.input)
+            const callCode = `solution(${JSON.stringify(testCase.input)})`;
+            try {
+              const callContext = vm.createContext({ ...solutionSandbox, solution: solutionContext.solution });
+              vm.runInContext(`result = ${callCode}`, callContext, { timeout: 2000 });
+              if (callContext.result !== undefined) {
+                actualOutput = String(callContext.result);
+              }
+            } catch (e) {
+              // Если не удалось вызвать solution, используем console.log результат
+            }
+          } catch (e) {
+            // Игнорируем ошибки при попытке вызвать solution
+          }
+        }
 
-      results.push({
-        input: testCase.input,
-        expectedOutput: testCase.expectedOutput,
-        actualOutput: sandbox.result,
-        passed: passed,
-      });
+        const expected = String(testCase.expectedOutput || "").trim();
+        const actual = String(actualOutput || "").trim();
+        const passed = actual === expected;
 
-      if (!passed) {
+        results.push({
+          input: testCase.input ?? "—",
+          expectedOutput: expected || "—",
+          actualOutput: actual || "—",
+          passed: passed,
+        });
+
+        if (!passed) {
+          allPassed = false;
+        }
+      } catch (execError) {
+        results.push({
+          input: testCase.input ?? "—",
+          expectedOutput: testCase.expectedOutput ?? "—",
+          actualOutput: null,
+          passed: false,
+          error: execError.message || "Ошибка выполнения кода",
+        });
         allPassed = false;
       }
     }
 
     return {
-      success: allPassed,
-      error: allPassed ? null : "Некоторые тесты не прошли",
+      success: allPassed && results.length > 0,
+      error: allPassed ? null : "Некоторые тесты не прошли. Проверьте решение.",
       details: results,
       executionTime: Date.now() - startTime,
     };
   } catch (error) {
     return {
       success: false,
-      error: error.message,
+      error: error.message || "Ошибка выполнения кода",
       details: results,
       executionTime: Date.now() - startTime,
     };

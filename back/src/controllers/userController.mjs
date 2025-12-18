@@ -707,4 +707,96 @@ export default {
       res.status(500).json({ error: error.message });
     }
   },
+
+  async updateRole(req, res) {
+    try {
+      const { userId } = req.user || {};
+      const { targetUserId, role } = req.body;
+
+      if (!targetUserId || !role) {
+        return res.status(400).json({ error: "targetUserId и role обязательны" });
+      }
+
+      if (!["user", "admin"].includes(role)) {
+        return res.status(400).json({ error: "Роль должна быть 'user' или 'admin'" });
+      }
+
+      // Проверяем, что текущий пользователь - админ
+      const currentUser = await client
+        .db("main")
+        .collection("user")
+        .findOne({ _id: new ObjectId(userId) }, { projection: { role: 1 } });
+
+      if (!currentUser || currentUser.role !== "admin") {
+        return res.status(403).json({ error: "Только администраторы могут изменять роли" });
+      }
+
+      // Обновляем роль пользователя
+      const result = await client
+        .db("main")
+        .collection("user")
+        .updateOne(
+          { _id: new ObjectId(targetUserId) },
+          { $set: { role: role, updatedAt: new Date() } }
+        );
+
+      if (result.matchedCount === 0) {
+        return res.status(404).json({ error: "Пользователь не найден" });
+      }
+
+      res.status(200).json({ message: `Роль пользователя успешно изменена на '${role}'` });
+    } catch (error) {
+      console.error("Ошибка обновления роли:", error);
+      res.status(500).json({ error: error.message });
+    }
+  },
+
+  async makeFirstAdmin(req, res) {
+    try {
+      // Проверяем, есть ли уже админы в системе
+      const existingAdmin = await client
+        .db("main")
+        .collection("user")
+        .findOne({ role: "admin" });
+
+      if (existingAdmin) {
+        return res.status(403).json({ 
+          error: "В системе уже есть администратор. Используйте endpoint /api/user/role для изменения ролей." 
+        });
+      }
+
+      const { email } = req.body;
+
+      if (!email) {
+        return res.status(400).json({ error: "Email обязателен" });
+      }
+
+      // Находим пользователя по email
+      const user = await client
+        .db("main")
+        .collection("user")
+        .findOne({ email });
+
+      if (!user) {
+        return res.status(404).json({ error: "Пользователь с таким email не найден" });
+      }
+
+      // Делаем его админом
+      await client
+        .db("main")
+        .collection("user")
+        .updateOne(
+          { _id: user._id },
+          { $set: { role: "admin", updatedAt: new Date() } }
+        );
+
+      res.status(200).json({ 
+        message: `Пользователь ${email} успешно назначен администратором`,
+        userId: user._id.toString()
+      });
+    } catch (error) {
+      console.error("Ошибка назначения первого админа:", error);
+      res.status(500).json({ error: error.message });
+    }
+  },
 };

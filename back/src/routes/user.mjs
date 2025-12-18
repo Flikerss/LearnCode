@@ -1,6 +1,6 @@
 import express from "express";
 import usersController from "../controllers/userController.mjs";
-import authenticateToken from "../middlewares/authMiddleware.mjs";
+import authenticateToken, { requireRole } from "../middlewares/authMiddleware.mjs";
 
 const router = express.Router();
 
@@ -25,5 +25,11 @@ router.put("/preferences", authenticateToken, usersController.updatePreferences)
 router.get("/progress", authenticateToken, usersController.getProgress);
 router.put("/progress", authenticateToken, usersController.updateProgress);
 router.get("/achievements", authenticateToken, usersController.getAchievements);
+
+// Endpoint для изменения роли (только для админов)
+router.put("/role", authenticateToken, requireRole("admin"), usersController.updateRole);
+
+// Endpoint для создания первого админа (доступен всем, но только если нет админов)
+router.post("/make-admin", usersController.makeFirstAdmin);
 
 export default router;
