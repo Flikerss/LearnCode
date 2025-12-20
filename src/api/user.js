@@ -12,25 +12,15 @@ export function updateUserName({ userId, name }) {
 }
 
 export function updateUserPassword({ currentPassword, newPassword, userId }) {
-  const body = { currentPassword, newPassword };
-  if (userId) {
-    body.userId = userId;
-  }
-
   return apiRequest("/user/password", {
     method: "PUT",
-    body,
+    body: { currentPassword, newPassword },
   });
 }
 
 export function updateUserAvatar({ avatar, userId }) {
-  const body = { avatar };
-  if (userId) {
-    body.userId = userId;
-  }
-
   return apiRequest("/user/avatar", {
     method: "PUT",
-    body,
+    body: { avatar },
   });
 }

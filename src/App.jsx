@@ -20,13 +20,14 @@ const SignUp = lazy(() => import("./pages/SignUp/SignUp"));
 const Lessons = lazy(() => import("./pages/Lessons/Lessons"));
 const LessonPage = lazy(() => import("./pages/LessonPage/LessonPage"));
 const Profile = lazy(() => import("./pages/Profile/Profile"));
+const ProfileEditPage = lazy(() => import("./pages/Profile/ProfileEditPage"));
 const AdminPanel = lazy(() => import("./pages/Adminpanel/Adminpanel"));
 
 // Suspense fallbacks share the same skeletons as data loading states.
 
 function AppContent() {
   const location = useLocation();
-  const hideNavbarRoutes = ["/profile"];
+  const hideNavbarRoutes = ["/profile", "/profile/edit"];
   const shouldHideNavbar = hideNavbarRoutes.includes(location.pathname);
 
   return (
@@ -87,6 +88,16 @@ function AppContent() {
             <ProtectedRoute>
               <Suspense fallback={<ProfileSkeleton />}>
                 <Profile />
+              </Suspense>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile/edit"
+          element={
+            <ProtectedRoute>
+              <Suspense fallback={<ProfileSkeleton />}>
+                <ProfileEditPage />
               </Suspense>
             </ProtectedRoute>
           }

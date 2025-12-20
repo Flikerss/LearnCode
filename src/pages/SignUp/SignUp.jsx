@@ -1,12 +1,14 @@
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
+import { validateDisplayName, validatePassword } from "../../utils/validation";
 import "./SignUp.css";
 
 export default function SignUp() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const auth = useContext(AuthContext);
   const navigate = useNavigate();
@@ -17,6 +19,20 @@ export default function SignUp() {
       console.error("Регистрация недоступна: AuthContext не подцепился");
       return;
     }
+
+    const nameError = validateDisplayName(name);
+    if (nameError) {
+      setError(nameError);
+      return;
+    }
+
+    const passwordError = validatePassword(password);
+    if (passwordError) {
+      setError(passwordError);
+      return;
+    }
+
+    setError(null);
     setLoading(true);
     try {
       await auth.register({ name, email, password });
@@ -32,6 +48,7 @@ export default function SignUp() {
     <section className="auth-page">
       <div className="auth-container">
         <h2>Регистрация</h2>
+        {error && <p className="auth-error">{error}</p>}
         <form onSubmit={handleSubmit}>
           <label>
             Имя:

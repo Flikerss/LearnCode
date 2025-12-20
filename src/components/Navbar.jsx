@@ -3,19 +3,34 @@ import { Link, useNavigate } from "react-router-dom";
 import "./Navbar.css";
 import { AuthContext } from "../context/AuthContext";
 
-const DEFAULT_AVATAR_COLOR = "#ff8c00";
+const DEFAULT_AVATAR_COLOR = "#4b5563";
 
-function resolveAvatar(avatar) {
-  if (typeof avatar === "string" && avatar.startsWith("color:")) {
-    const [, colorValue] = avatar.split("color:");
-    return { type: "color", value: colorValue || DEFAULT_AVATAR_COLOR };
+function parseAvatarString(raw) {
+  if (typeof raw !== "string")
+    return { color: DEFAULT_AVATAR_COLOR, emoji: null, image: null };
+
+  // Image URL
+  if (raw.startsWith("http")) {
+    return { image: raw, color: null, emoji: null };
   }
 
-  if (avatar) {
-    return { type: "image", value: avatar };
+  const parts = raw.split(";").map((p) => p.trim());
+  const data = { color: DEFAULT_AVATAR_COLOR, emoji: null, image: null };
+
+  parts.forEach((p) => {
+    if (p.startsWith("color:")) {
+      data.color = p.split("color:")[1] || DEFAULT_AVATAR_COLOR;
+    }
+    if (p.startsWith("emoji:")) {
+      data.emoji = p.split("emoji:")[1] || null;
+    }
+  });
+
+  if (!data.color && raw.startsWith("color:")) {
+    data.color = raw.split("color:")[1] || DEFAULT_AVATAR_COLOR;
   }
 
-  return { type: "color", value: DEFAULT_AVATAR_COLOR };
+  return data;
 }
 
 export default function Navbar() {
@@ -27,7 +42,7 @@ export default function Navbar() {
   const isGuest = !user;
   const userName = user ? user.name : "Гость";
   const userAvatar = user ? user.avatar : null;
-  const avatarMeta = resolveAvatar(userAvatar);
+  const avatarMeta = parseAvatarString(userAvatar);
   const avatarInitial = userName ? userName[0].toUpperCase() : "?";
   const isAdmin = user?.role === "admin";
 
@@ -85,18 +100,20 @@ export default function Navbar() {
               onClick={() => setIsOpen(false)}
             >
               <div className="avatar-wrapper">
-                {avatarMeta.type === "image" ? (
+                {avatarMeta.image ? (
                   <img
-                    src={avatarMeta.value}
+                    src={avatarMeta.image}
                     alt={userName}
                     className="avatar"
                   />
                 ) : (
                   <div
                     className="avatar-placeholder"
-                    style={{ backgroundColor: avatarMeta.value }}
+                    style={{
+                      backgroundColor: avatarMeta.color || DEFAULT_AVATAR_COLOR,
+                    }}
                   >
-                    {avatarInitial}
+                    {avatarMeta.emoji || avatarInitial}
                   </div>
                 )}
               </div>
