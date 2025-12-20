@@ -1,27 +1,38 @@
 import React from "react";
 import "./ProfileCard.css";
 
-const DEFAULT_AVATAR_COLOR = "#ff8c00";
+const DEFAULT_AVATAR_COLOR = "#4b5563";
 
-function resolveAvatar(user) {
+function parseAvatar(user) {
   const raw = user?.avatar;
-  if (typeof raw === "string" && raw.startsWith("color:")) {
-    const [, colorValue] = raw.split("color:");
-    return {
-      type: "color",
-      value: colorValue || DEFAULT_AVATAR_COLOR,
-    };
+
+  if (typeof raw === "string" && raw.startsWith("http")) {
+    return { image: raw, color: null, emoji: null };
   }
 
-  if (raw) {
-    return { type: "image", value: raw };
+  const meta = { color: DEFAULT_AVATAR_COLOR, emoji: null, image: null };
+
+  if (typeof raw === "string") {
+    raw.split(";").forEach((part) => {
+      const token = part.trim();
+      if (token.startsWith("color:")) {
+        meta.color = token.split("color:")[1] || DEFAULT_AVATAR_COLOR;
+      }
+      if (token.startsWith("emoji:")) {
+        meta.emoji = token.split("emoji:")[1] || null;
+      }
+    });
+
+    if (!meta.color && raw.startsWith("color:")) {
+      meta.color = raw.split("color:")[1] || DEFAULT_AVATAR_COLOR;
+    }
   }
 
-  if (typeof user?.avatarColor === "string") {
-    return { type: "color", value: user.avatarColor };
+  if (!raw && typeof user?.avatarColor === "string") {
+    meta.color = user.avatarColor;
   }
 
-  return { type: "color", value: DEFAULT_AVATAR_COLOR };
+  return meta;
 }
 
 export default function ProfileCard({ user, onLogout, onEditProfile }) {
@@ -51,20 +62,20 @@ export default function ProfileCard({ user, onLogout, onEditProfile }) {
     }
   };
 
-  const avatarMeta = resolveAvatar(user);
+  const avatarMeta = parseAvatar(user);
   const avatarLetter = user.name ? user.name.charAt(0).toUpperCase() : "?";
 
   return (
     <div className="profile-user-card">
       <div className="profile-avatar">
-        {avatarMeta.type === "image" ? (
-          <img src={avatarMeta.value} alt={user.name} />
+        {avatarMeta.image ? (
+          <img src={avatarMeta.image} alt={user.name} />
         ) : (
           <div
             className="avatar-placeholder"
-            style={{ background: avatarMeta.value }}
+            style={{ background: avatarMeta.color || DEFAULT_AVATAR_COLOR }}
           >
-            {avatarLetter}
+            {avatarMeta.emoji || avatarLetter}
           </div>
         )}
       </div>

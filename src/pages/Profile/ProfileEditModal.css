@@ -14,34 +14,7 @@
   backdrop-filter: blur(4px);
 }
 
-.profile-edit-modal__content {
-  position: relative;
-  width: min(640px, calc(100% - 32px));
-  max-height: calc(100vh - 80px);
-  overflow-y: auto;
-  background: #ffffff;
-  border-radius: 24px;
-  padding: 32px;
-  box-shadow: 0 35px 120px rgba(15, 23, 42, 0.35);
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-.profile-edit-modal__header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.modal-kicker {
-  text-transform: uppercase;
-  font-size: 0.75rem;
-  letter-spacing: 0.2em;
-  color: #94a3b8;
-  margin-bottom: 6px;
-}
+/* legacy modal styles removed */
 
 .profile-edit-modal__header h2 {
   margin: 0;
