@@ -29,10 +29,19 @@ const JUDGE0_API_KEY = process.env.JUDGE0_API_KEY;
 const app = express();
 const port = process.env.PORT || 3000;
 const clientUrl = process.env.CLIENT_URL || "http://localhost:5173";
+const allowedOrigins = clientUrl
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
 
 app.use(
   cors({
-    origin: clientUrl,
+    origin: (origin, callback) => {
+      // Разрешаем запросы без заголовка Origin (например, curl или Postman)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) return callback(null, true);
+      return callback(new Error("Not allowed by CORS"));
+    },
     credentials: true,
   })
 );
@@ -84,7 +93,8 @@ app.use((req, res) => {
   res.status(404).json({ error: "Маршрут не найден" });
 });
 
-app.listen(port, () => {
+app.listen(port, '0.0.0.0', () => {
   console.log(`Сервер запущен на порту ${port}`);
+  console.log(`Доступен на всех сетевых интерфейсах (0.0.0.0:${port})`);
   console.log(`База данных: ${url ? "подключена" : "не настроена"}`);
 });

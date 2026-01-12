@@ -4,7 +4,8 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
 const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
-const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || "your_refresh_secret";
+const JWT_REFRESH_SECRET =
+  process.env.JWT_REFRESH_SECRET || "your_refresh_secret";
 const PROGRESS_INCREMENT = 4;
 const COOKIE_MAX_AGE = 7 * 24 * 60 * 60 * 1000;
 const REFRESH_COOKIE_MAX_AGE = 30 * 24 * 60 * 60 * 1000;
@@ -30,7 +31,10 @@ function setAuthCookie(res, token, refreshToken) {
 
 function clearAuthCookie(res) {
   res.clearCookie("token", { ...COOKIE_OPTIONS, maxAge: undefined });
-  res.clearCookie("refreshToken", { ...REFRESH_COOKIE_OPTIONS, maxAge: undefined });
+  res.clearCookie("refreshToken", {
+    ...REFRESH_COOKIE_OPTIONS,
+    maxAge: undefined,
+  });
 }
 
 async function createSession(userId, refreshToken) {
@@ -232,12 +236,17 @@ export default {
         })
         .toArray();
 
-      const lastLesson = completedLessons.length > 0
-        ? await client
-            .db("main")
-            .collection("lessons")
-            .findOne({ _id: new ObjectId(completedLessons[completedLessons.length - 1]) })
-        : null;
+      const lastLesson =
+        completedLessons.length > 0
+          ? await client
+              .db("main")
+              .collection("lessons")
+              .findOne({
+                _id: new ObjectId(
+                  completedLessons[completedLessons.length - 1]
+                ),
+              })
+          : null;
 
       const userAchievements = await client
         .db("main")
@@ -269,15 +278,18 @@ export default {
         const chapterLessons = userLessons.filter(
           (ul) => ul.chapterId?.toString() === chapter._id.toString()
         );
-        const completed = chapterLessons.filter((ul) => ul.status === "completed").length;
+        const completed = chapterLessons.filter(
+          (ul) => ul.status === "completed"
+        ).length;
         return {
           chapterId: chapter._id.toString(),
           chapterTitle: chapter.title,
           total: chapter.lessons?.length || 0,
           completed,
-          progress: chapter.lessons?.length > 0 
-            ? Math.round((completed / chapter.lessons.length) * 100) 
-            : 0,
+          progress:
+            chapter.lessons?.length > 0
+              ? Math.round((completed / chapter.lessons.length) * 100)
+              : 0,
         };
       });
 
@@ -404,10 +416,18 @@ export default {
     const { name } = req.body;
     const { id } = req.params;
     try {
+      if (!id || !ObjectId.isValid(id)) {
+        return res
+          .status(400)
+          .json({ error: "Некорректный идентификатор пользователя" });
+      }
       const result = await client
         .db("main")
         .collection("user")
-        .updateOne({ _id: new ObjectId(id) }, { $set: { name: name, updatedAt: new Date() } });
+        .updateOne(
+          { _id: new ObjectId(id) },
+          { $set: { name: name, updatedAt: new Date() } }
+        );
       if (result.modifiedCount === 0) {
         return res.status(404).json({ message: "Пользователь не найден" });
       }
@@ -424,6 +444,9 @@ export default {
   async getSettings(req, res) {
     try {
       const { userId } = req.user || {};
+      if (!userId || !ObjectId.isValid(userId)) {
+        return res.status(401).json({ error: "Необходимо авторизоваться" });
+      }
       const user = await client
         .db("main")
         .collection("user")
@@ -435,8 +458,16 @@ export default {
         return res.status(404).json({ error: "Пользователь не найден" });
       }
       res.status(200).json({
-        settings: user.settings || { theme: "light", language: "ru", notifications: true },
-        privacy: user.privacy || { showProfile: true, showProgress: true, showAchievements: true },
+        settings: user.settings || {
+          theme: "light",
+          language: "ru",
+          notifications: true,
+        },
+        privacy: user.privacy || {
+          showProfile: true,
+          showProgress: true,
+          showAchievements: true,
+        },
       });
     } catch (error) {
       console.error("Ошибка получения настроек:", error);
@@ -447,6 +478,9 @@ export default {
   async updateSettings(req, res) {
     try {
       const { userId } = req.user || {};
+      if (!userId || !ObjectId.isValid(userId)) {
+        return res.status(401).json({ error: "Необходимо авторизоваться" });
+      }
       const { settings, privacy } = req.body;
       const updateData = { updatedAt: new Date() };
       if (settings) updateData.settings = settings;
@@ -471,6 +505,9 @@ export default {
   async updateAvatar(req, res) {
     try {
       const { userId } = req.user || {};
+      if (!userId || !ObjectId.isValid(userId)) {
+        return res.status(401).json({ error: "Необходимо авторизоваться" });
+      }
       const { avatar } = req.body;
       if (!avatar) {
         return res.status(400).json({ error: "Avatar обязателен" });
@@ -498,12 +535,19 @@ export default {
   async updatePassword(req, res) {
     try {
       const { userId } = req.user || {};
+      if (!userId || !ObjectId.isValid(userId)) {
+        return res.status(401).json({ error: "Необходимо авторизоваться" });
+      }
       const { currentPassword, newPassword } = req.body;
       if (!currentPassword || !newPassword) {
-        return res.status(400).json({ error: "Текущий и новый пароль обязательны" });
+        return res
+          .status(400)
+          .json({ error: "Текущий и новый пароль обязательны" });
       }
       if (newPassword.length < 6) {
-        return res.status(400).json({ error: "Новый пароль должен содержать минимум 6 символов" });
+        return res
+          .status(400)
+          .json({ error: "Новый пароль должен содержать минимум 6 символов" });
       }
 
       const user = await client
@@ -542,6 +586,9 @@ export default {
   async getPreferences(req, res) {
     try {
       const { userId } = req.user || {};
+      if (!userId || !ObjectId.isValid(userId)) {
+        return res.status(401).json({ error: "Необходимо авторизоваться" });
+      }
       const profile = await client
         .db("main")
         .collection("profiles")
@@ -561,9 +608,15 @@ export default {
   async updatePreferences(req, res) {
     try {
       const { userId } = req.user || {};
+      if (!userId || !ObjectId.isValid(userId)) {
+        return res.status(401).json({ error: "Необходимо авторизоваться" });
+      }
       const { preferences, bio, socials } = req.body;
 
-      const updateData = { userId: new ObjectId(userId), updatedAt: new Date() };
+      const updateData = {
+        userId: new ObjectId(userId),
+        updatedAt: new Date(),
+      };
       if (preferences) updateData.preferences = preferences;
       if (bio !== undefined) updateData.bio = bio;
       if (socials) updateData.socials = socials;
@@ -587,12 +640,23 @@ export default {
   async getProgress(req, res) {
     try {
       const { userId } = req.user || {};
+      if (!userId || !ObjectId.isValid(userId)) {
+        return res.status(401).json({ error: "Необходимо авторизоваться" });
+      }
       const user = await client
         .db("main")
         .collection("user")
         .findOne(
           { _id: new ObjectId(userId) },
-          { projection: { progress: 1, experience: 1, level: 1, streak: 1, lastActivityDate: 1 } }
+          {
+            projection: {
+              progress: 1,
+              experience: 1,
+              level: 1,
+              streak: 1,
+              lastActivityDate: 1,
+            },
+          }
         );
 
       const userLessons = await client
@@ -636,15 +700,18 @@ export default {
               chapterId: chapter._id,
             })
             .toArray();
-          const completed = chapterLessons.filter((ul) => ul.status === "completed").length;
+          const completed = chapterLessons.filter(
+            (ul) => ul.status === "completed"
+          ).length;
           return {
             chapterId: chapter._id.toString(),
             title: chapter.title,
             total: chapter.lessons?.length || 0,
             completed,
-            progress: chapter.lessons?.length > 0
-              ? Math.round((completed / chapter.lessons.length) * 100)
-              : 0,
+            progress:
+              chapter.lessons?.length > 0
+                ? Math.round((completed / chapter.lessons.length) * 100)
+                : 0,
           };
         })
       );
@@ -667,6 +734,9 @@ export default {
   async getAchievements(req, res) {
     try {
       const { userId } = req.user || {};
+      if (!userId || !ObjectId.isValid(userId)) {
+        return res.status(401).json({ error: "Необходимо авторизоваться" });
+      }
       const userAchievements = await client
         .db("main")
         .collection("user_achievements")
@@ -711,14 +781,21 @@ export default {
   async updateRole(req, res) {
     try {
       const { userId } = req.user || {};
+      if (!userId || !ObjectId.isValid(userId)) {
+        return res.status(401).json({ error: "Необходимо авторизоваться" });
+      }
       const { targetUserId, role } = req.body;
 
       if (!targetUserId || !role) {
-        return res.status(400).json({ error: "targetUserId и role обязательны" });
+        return res
+          .status(400)
+          .json({ error: "targetUserId и role обязательны" });
       }
 
       if (!["user", "admin"].includes(role)) {
-        return res.status(400).json({ error: "Роль должна быть 'user' или 'admin'" });
+        return res
+          .status(400)
+          .json({ error: "Роль должна быть 'user' или 'admin'" });
       }
 
       // Проверяем, что текущий пользователь - админ
@@ -728,7 +805,9 @@ export default {
         .findOne({ _id: new ObjectId(userId) }, { projection: { role: 1 } });
 
       if (!currentUser || currentUser.role !== "admin") {
-        return res.status(403).json({ error: "Только администраторы могут изменять роли" });
+        return res
+          .status(403)
+          .json({ error: "Только администраторы могут изменять роли" });
       }
 
       // Обновляем роль пользователя
@@ -744,7 +823,9 @@ export default {
         return res.status(404).json({ error: "Пользователь не найден" });
       }
 
-      res.status(200).json({ message: `Роль пользователя успешно изменена на '${role}'` });
+      res
+        .status(200)
+        .json({ message: `Роль пользователя успешно изменена на '${role}'` });
     } catch (error) {
       console.error("Ошибка обновления роли:", error);
       res.status(500).json({ error: error.message });
@@ -760,8 +841,9 @@ export default {
         .findOne({ role: "admin" });
 
       if (existingAdmin) {
-        return res.status(403).json({ 
-          error: "В системе уже есть администратор. Используйте endpoint /api/user/role для изменения ролей." 
+        return res.status(403).json({
+          error:
+            "В системе уже есть администратор. Используйте endpoint /api/user/role для изменения ролей.",
         });
       }
 
@@ -778,7 +860,9 @@ export default {
         .findOne({ email });
 
       if (!user) {
-        return res.status(404).json({ error: "Пользователь с таким email не найден" });
+        return res
+          .status(404)
+          .json({ error: "Пользователь с таким email не найден" });
       }
 
       // Делаем его админом
@@ -790,9 +874,9 @@ export default {
           { $set: { role: "admin", updatedAt: new Date() } }
         );
 
-      res.status(200).json({ 
+      res.status(200).json({
         message: `Пользователь ${email} успешно назначен администратором`,
-        userId: user._id.toString()
+        userId: user._id.toString(),
       });
     } catch (error) {
       console.error("Ошибка назначения первого админа:", error);
