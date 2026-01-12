@@ -19,7 +19,7 @@ const AVATAR_COLORS = [
   "#6b7280",
   "#9ca3af",
   "#d1d5db",
-  "#111827",
+  "#c71c7aff",  
   "#0ea5e9",
   "#14b8a6",
   "#f59e0b",
@@ -125,6 +125,8 @@ export default function ProfileEditPage() {
   const handleNameSubmit = async (event) => {
     event.preventDefault();
     const trimmedName = name.trim();
+    setErrorMessage(null);
+    setStatusMessage(null);
     const nameError = validateDisplayName(trimmedName);
     if (nameError) {
       setErrorMessage(nameError);
@@ -140,7 +142,6 @@ export default function ProfileEditPage() {
     }
 
     setIsSavingName(true);
-    setErrorMessage(null);
     try {
       await updateUserName({ userId, name: trimmedName });
       await refreshProfile();
@@ -154,6 +155,8 @@ export default function ProfileEditPage() {
 
   const handlePasswordSubmit = async (event) => {
     event.preventDefault();
+    setErrorMessage(null);
+    setStatusMessage(null);
     if (!currentPassword) {
       setErrorMessage("Введите текущий пароль");
       return;
@@ -174,7 +177,6 @@ export default function ProfileEditPage() {
     }
 
     setIsSavingPassword(true);
-    setErrorMessage(null);
     try {
       await updateUserPassword({ currentPassword, newPassword });
       setCurrentPassword("");
@@ -190,13 +192,14 @@ export default function ProfileEditPage() {
 
   const handleAvatarSubmit = async (event) => {
     event.preventDefault();
+    setErrorMessage(null);
+    setStatusMessage(null);
     if (!avatarColor) {
       setErrorMessage("Выберите цвет аватара");
       return;
     }
 
     setIsSavingAvatar(true);
-    setErrorMessage(null);
     try {
       const avatarPayload = `color:${avatarColor};emoji:${avatarEmoji || ""}`;
       await updateUserAvatar({ avatar: avatarPayload });

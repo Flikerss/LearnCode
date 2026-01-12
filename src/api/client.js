@@ -1,8 +1,9 @@
-const BASE_URL = import.meta.env.VITE_API_URL || 
-  (import.meta.env.DEV ? "" : "http://localhost:3000");
+const RAW_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+const BASE_URL = RAW_BASE_URL.replace(/\/+$/, "");
+const API_BASE = BASE_URL.endsWith("/api") ? BASE_URL : `${BASE_URL}/api`;
 const DEBUG_MIN_DURATION = Number(import.meta.env.VITE_API_DEBUG_DELAY || 0);
 
-function delay(ms) {я
+function delay(ms) {
   return new Promise((res) => setTimeout(res, ms));
 }
 
@@ -42,8 +43,11 @@ export async function apiRequest(path, options = {}) {
   }
 
   const start = Date.now();
-  const apiPath = path.startsWith('/api') ? path : `/api${path}`;
-  const response = await fetch(`${BASE_URL}${apiPath}`, fetchOptions);
+  const apiPath = path.startsWith("/") ? path : `/${path}`;
+  const url = path.startsWith("/api")
+    ? `${BASE_URL}${apiPath}`
+    : `${API_BASE}${apiPath}`;
+  const response = await fetch(url, fetchOptions);
   const data = await parseResponse(response);
   if (DEBUG_MIN_DURATION > 0) {
     const elapsed = Date.now() - start;

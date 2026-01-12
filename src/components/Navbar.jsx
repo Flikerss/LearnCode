@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { Home, Info, BookOpen, ShieldHalf, User, LogIn } from "lucide-react";
 import "./Navbar.css";
 import { AuthContext } from "../context/AuthContext";
 
@@ -68,17 +69,29 @@ export default function Navbar() {
 
         <ul className="navbar-links">
           <li>
-            <Link to="/">Главная</Link>
+            <Link to="/">
+              <Home className="nav-icon" aria-hidden="true" />
+              <span>Главная</span>
+            </Link>
           </li>
           <li>
-            <Link to="/about">О проекте</Link>
+            <Link to="/about">
+              <Info className="nav-icon" aria-hidden="true" />
+              <span>О проекте</span>
+            </Link>
           </li>
           <li>
-            <Link to="/lessons">Уроки</Link>
+            <Link to="/lessons">
+              <BookOpen className="nav-icon" aria-hidden="true" />
+              <span>Уроки</span>
+            </Link>
           </li>
           {isAdmin && (
             <li>
-              <Link to="/admin">Админ панель</Link>
+              <Link to="/admin">
+                <ShieldHalf className="nav-icon" aria-hidden="true" />
+                <span>Админ панель</span>
+              </Link>
             </li>
           )}
         </ul>
@@ -87,10 +100,12 @@ export default function Navbar() {
           {isGuest ? (
             <div className="navbar-actions">
               <Link to="/login" className="btn-outline">
-                Войти
+                <LogIn className="nav-icon" aria-hidden="true" />
+                <span>Войти</span>
               </Link>
               <Link to="/register" className="btn-filled">
-                Регистрация
+                <User className="nav-icon" aria-hidden="true" />
+                <span>Регистрация</span>
               </Link>
             </div>
           ) : (
@@ -136,23 +151,27 @@ export default function Navbar() {
         <ul className="mobile-links">
           <li>
             <Link to="/" onClick={() => setIsOpen(false)}>
-              Главная
+              <Home className="nav-icon" aria-hidden="true" />
+              <span>Главная</span>
             </Link>
           </li>
           <li>
             <Link to="/about" onClick={() => setIsOpen(false)}>
-              О проекте
+              <Info className="nav-icon" aria-hidden="true" />
+              <span>О проекте</span>
             </Link>
           </li>
           <li>
             <Link to="/lessons" onClick={() => setIsOpen(false)}>
-              Уроки
+              <BookOpen className="nav-icon" aria-hidden="true" />
+              <span>Уроки</span>
             </Link>
           </li>
           {isAdmin && (
             <li>
               <Link to="/admin" onClick={() => setIsOpen(false)}>
-                Админ панель
+                <ShieldHalf className="nav-icon" aria-hidden="true" />
+                <span>Админ панель</span>
               </Link>
             </li>
           )}
@@ -173,14 +192,16 @@ export default function Navbar() {
               className="btn-outline fullwidth"
               onClick={() => setIsOpen(false)}
             >
-              Войти
+              <LogIn className="nav-icon" aria-hidden="true" />
+              <span>Войти</span>
             </Link>
             <Link
               to="/register"
               className="btn-filled fullwidth"
               onClick={() => setIsOpen(false)}
             >
-              Регистрация
+              <User className="nav-icon" aria-hidden="true" />
+              <span>Регистрация</span>
             </Link>
           </div>
         ) : (
