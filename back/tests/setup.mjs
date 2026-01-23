@@ -5,13 +5,11 @@ let mongoServer;
 let mongoClient;
 
 beforeAll(async () => {
-  // Запускаем MongoDB Memory Server для тестов
   mongoServer = await MongoMemoryServer.create();
   const mongoUri = mongoServer.getUri();
   mongoClient = new MongoClient(mongoUri);
   await mongoClient.connect();
   
-  // Устанавливаем тестовую базу данных в глобальную область
   global.testDb = mongoClient.db('test');
   global.testClient = mongoClient;
 });
@@ -26,7 +24,6 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
-  // Очищаем все коллекции перед каждым тестом
   if (global.testDb) {
     const collections = await global.testDb.listCollections().toArray();
     for (const collection of collections) {
@@ -34,5 +31,3 @@ beforeEach(async () => {
     }
   }
 });
-
-

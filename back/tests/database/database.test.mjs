@@ -8,7 +8,6 @@ describe('Database Tests', () => {
   let db;
 
   beforeAll(async () => {
-    // Запускаем MongoDB Memory Server
     mongoServer = await MongoMemoryServer.create();
     const uri = mongoServer.getUri();
     client = new MongoClient(uri);
@@ -26,7 +25,6 @@ describe('Database Tests', () => {
   });
 
   beforeEach(async () => {
-    // Очищаем все коллекции перед каждым тестом
     const collections = await db.listCollections().toArray();
     for (const collection of collections) {
       await db.collection(collection.name).deleteMany({});
@@ -131,7 +129,6 @@ describe('Database Tests', () => {
         password: 'hashed_password',
       });
 
-      // Попытка создать пользователя с тем же email должна вызвать ошибку
       await expect(
         usersCollection.insertOne({
           name: 'Test User 2',
@@ -398,8 +395,7 @@ describe('Database Tests', () => {
       const userLessonsCollection = db.collection('user_lessons');
       const userId = new ObjectId();
       const lessonId = new ObjectId();
-      
-      // Первая вставка
+
       await userLessonsCollection.updateOne(
         { userId, lessonId },
         {
@@ -504,5 +500,3 @@ describe('Database Tests', () => {
     });
   });
 });
-
-

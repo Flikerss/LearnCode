@@ -12,5 +12,3 @@ module.exports = {
   ],
   setupFilesAfterEnv: ["<rootDir>/tests/setup.mjs"],
 };
-
-
