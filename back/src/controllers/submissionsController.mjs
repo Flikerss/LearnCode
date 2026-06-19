@@ -183,14 +183,24 @@ async function executeJavaScriptLocally(code, testCases) {
 
       const context = vm.createContext(sandbox);
       vm.runInContext(code, context, { timeout: 5000 });
+      let output = sandbox.result;
+      
+      if (output === null || output === undefined) {
+        // Проверяем, есть ли return в коде
+        const hasReturn = code.includes('return');
+        if (hasReturn) {
+          const fn = new Function(code);
+          output = fn();
+        }
+      }
 
       const passed =
-        sandbox.result?.toString().trim() === testCase.expectedOutput?.toString().trim();
+        output?.toString().trim() === testCase.expectedOutput?.toString().trim();
 
       results.push({
         input: testCase.input,
         expectedOutput: testCase.expectedOutput,
-        actualOutput: sandbox.result,
+        actualOutput: output,
         passed: passed,
       });
 
