@@ -132,6 +132,26 @@
   font-weight: 600;
 }
 
+.success-video {
+  margin-top: 20px;
+  padding: 20px;
+  background: #000000;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.success-video h3 {
+  color: #ffffff;
+  margin-bottom: 15px;
+}
+
+.success-video video {
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+  max-width: 100%;
+  background: #000000;
+}
+
 @media (max-width: 768px) {
   .compiler-header {
     flex-wrap: wrap;

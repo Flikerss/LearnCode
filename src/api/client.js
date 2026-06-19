@@ -1,6 +1,6 @@
 const RAW_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 const BASE_URL = RAW_BASE_URL.replace(/\/+$/, "");
-const API_BASE = BASE_URL.endsWith("/api") ? BASE_URL : `${BASE_URL}/api`;
+const API_BASE = BASE_URL;
 const DEBUG_MIN_DURATION = Number(import.meta.env.VITE_API_DEBUG_DELAY || 0);
 
 function delay(ms) {

@@ -45,7 +45,6 @@ export default function LessonCompiler({ lesson, lessonId }) {
       };
       const data = await createSubmission(payload);
       
-      // Обрабатываем ответ от сервера
       const success = data?.success === true;
       const status = success ? "accepted" : "rejected";
       const testResults = data?.submission?.testResults || data?.executionDetails || [];
@@ -58,7 +57,6 @@ export default function LessonCompiler({ lesson, lessonId }) {
         success,
       });
     } catch (err) {
-      // Обрабатываем ошибки от API
       const errorMessage = err?.body?.error || err?.message || "Не удалось отправить решение";
       setError(errorMessage);
       setResult({
@@ -130,10 +128,18 @@ export default function LessonCompiler({ lesson, lessonId }) {
             : "⚠ Ожидание проверки"}
         </div>
       )}
-      
-      {result?.error && !error && (
-        <div className="compiler-error-message">
-          {result.error}
+
+      {status === "accepted" && lesson?.interactiveUrl && (
+        <div className="success-video">
+          <video 
+            controls 
+            autoPlay
+            width="100%" 
+            style={{ maxWidth: '600px', borderRadius: '10px' }}
+          >
+            <source src={lesson.interactiveUrl} type="video/mp4" />
+            Ваш браузер не поддерживает видео.
+          </video>
         </div>
       )}
 
