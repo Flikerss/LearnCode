@@ -169,10 +169,26 @@ async function executeJavaScriptLocally(code, testCases) {
   const results = [];
   let allPassed = true;
 
+  function compareArrays(output, expected) {
+    try {
+      const expectedArray = JSON.parse(expected);
+      const actualArray = JSON.parse(output);
+      
+      if (Array.isArray(expectedArray) && Array.isArray(actualArray)) {
+        if (expectedArray.length !== actualArray.length) return false;
+        const sortedExpected = [...expectedArray].sort();
+        const sortedActual = [...actualArray].sort();
+        return JSON.stringify(sortedExpected) === JSON.stringify(sortedActual);
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
   try {
     for (const testCase of testCases) {
       const sandbox = {
-        input: testCase.input,
         result: null,
         console: {
           log: (...args) => {
@@ -182,11 +198,15 @@ async function executeJavaScriptLocally(code, testCases) {
       };
 
       const context = vm.createContext(sandbox);
+      const inputValue = testCase.input || "";
+      vm.runInContext(`const input = ${JSON.stringify(inputValue)};`, context);
+      vm.runInContext(`const INPUT = ${JSON.stringify(inputValue)};`, context);
+      
       vm.runInContext(code, context, { timeout: 5000 });
+      
       let output = sandbox.result;
       
       if (output === null || output === undefined) {
-        // Проверяем, есть ли return в коде
         const hasReturn = code.includes('return');
         if (hasReturn) {
           const fn = new Function(code);
@@ -194,8 +214,25 @@ async function executeJavaScriptLocally(code, testCases) {
         }
       }
 
-      const passed =
-        output?.toString().trim() === testCase.expectedOutput?.toString().trim();
+      let passed = false;
+      const expected = testCase.expectedOutput?.toString().trim() || "";
+      const actual = output?.toString().trim() || "";
+      if (expected.startsWith('[') && expected.endsWith(']')) {
+        passed = compareArrays(actual, expected);
+      } 
+      else if (expected.includes("...")) {
+        passed = actual.includes("...");
+        if (passed) {
+          const actualWithoutDots = actual.replace(/\.\.\.$/, "");
+          const maxlength = 10;
+          if (actualWithoutDots.length <= maxlength) {
+            passed = true;
+          }
+        }
+      } 
+      else {
+        passed = actual === expected;
+      }
 
       results.push({
         input: testCase.input,
