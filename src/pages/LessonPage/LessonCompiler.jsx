@@ -5,7 +5,7 @@ import "./LessonCompiler.css";
 const LANGUAGE_MAP = {
   63: {
     label: "JavaScript (Node.js)",
-    snippet: `function solution(input) {\n  // TODO: ваш код\n  return input;\n}\n\nconsole.log(solution("Hello"));\n`,
+    snippet: `function solution(input) {\n  // TODO: ваш код\n  return input;\n}\n\n// Вызываем функцию с входящими данными от тестов\nconsole.log(solution(typeof input !== 'undefined' ? input : ''));\n`,
   },
 };
 
@@ -131,15 +131,28 @@ export default function LessonCompiler({ lesson, lessonId }) {
 
       {status === "accepted" && lesson?.interactiveUrl && (
         <div className="success-video">
-          <video 
-            controls 
-            autoPlay
-            width="100%" 
-            style={{ maxWidth: '600px', borderRadius: '10px' }}
-          >
-            <source src={lesson.interactiveUrl} type="video/mp4" />
-            Ваш браузер не поддерживает видео.
-          </video>
+          {lesson.interactiveUrl.includes("youtube.com") || lesson.interactiveUrl.includes("youtu.be") ? (
+            <iframe
+              width="100%"
+              height="315"
+              style={{ maxWidth: '600px', borderRadius: '10px', border: 'none' }}
+              src={lesson.interactiveUrl.replace("watch?v=", "embed/").replace("youtu.be/", "youtube.com/embed/") + "?autoplay=1&mute=1"}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              title="Success Video"
+            ></iframe>
+          ) : (
+            <video 
+              controls 
+              autoPlay
+              muted
+              width="100%" 
+              style={{ maxWidth: '600px', borderRadius: '10px' }}
+            >
+              <source src={lesson.interactiveUrl} type="video/mp4" />
+              Ваш браузер не поддерживает видео.
+            </video>
+          )}
         </div>
       )}
 
